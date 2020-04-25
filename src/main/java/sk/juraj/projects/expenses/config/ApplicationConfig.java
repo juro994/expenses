@@ -4,7 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.ui.ModelMap;
 
+import sk.juraj.projects.expenses.converter.ToCategoryConverter;
+import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -24,7 +27,14 @@ public class ApplicationConfig {
 	
 	@Bean
 	public ModelMapper modelMapper() {
-		return new ModelMapper();
+		var modelMapper = new ModelMapper();
+		addConverters(modelMapper);
+		return modelMapper;
+	}
+	
+	private void addConverters(ModelMapper modelMapper) {
+		modelMapper.addConverter(new ToCategoryConverter());
+		modelMapper.addConverter(new ToCategoryDTOConverter());
 	}
 
 }
