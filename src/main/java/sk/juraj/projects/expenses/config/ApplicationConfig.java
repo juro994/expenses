@@ -4,7 +4,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.ui.ModelMap;
 
 import sk.juraj.projects.expenses.converter.ToCategoryConverter;
 import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
