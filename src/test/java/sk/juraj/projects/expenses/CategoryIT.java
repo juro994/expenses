@@ -9,7 +9,7 @@ class CategoryIT extends BaseIT {
 	@Test
 	public void checkEmptyCategories() throws Exception {
 		assertThat(this.restTemplate.getForObject(getUrlBase(),
-				String.class)).contains("deliberately failed test");
+				String.class)).contains("[]");
 	}
 	
 	
