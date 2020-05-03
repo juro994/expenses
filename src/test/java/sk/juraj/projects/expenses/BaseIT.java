@@ -15,7 +15,9 @@ public abstract class BaseIT {
 	protected TestRestTemplate restTemplate;
 	
 	protected String getUrlBase() {
-		return "http://localhost:" + port + "/expenses/";
+		return "http://localhost:" + port + "/expenses" + getApiPostfix();
 	}
+	
+	protected abstract String getApiPostfix();
 
 }
