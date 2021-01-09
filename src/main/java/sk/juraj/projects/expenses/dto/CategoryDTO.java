@@ -1,7 +1,7 @@
 package sk.juraj.projects.expenses.dto;
 
 public class CategoryDTO {
-
+	
 	private String name;
 
 	public CategoryDTO() {

@@ -6,6 +6,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -34,9 +35,10 @@ public class CategoryController {
 	}
 	
 	@PostMapping
-	public Category postCategory(CategoryDTO categoryDTO) {
-		var category = modelMapper.map(categoryDTO, Category.class);
-		return categoryService.addNewCategory(category);
+	public CategoryDTO postCategory(@RequestBody CategoryDTO categoryDTO) {
+		var categoryToSave = modelMapper.map(categoryDTO, Category.class);
+		var savedCategory = categoryService.addNewCategory(categoryToSave);
+		return modelMapper.map(savedCategory, CategoryDTO.class);
 	}
 	
 }
