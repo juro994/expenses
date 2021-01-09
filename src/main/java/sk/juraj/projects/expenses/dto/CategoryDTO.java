@@ -1,7 +1,10 @@
 package sk.juraj.projects.expenses.dto;
 
+import javax.validation.constraints.NotBlank;
+
 public class CategoryDTO {
 	
+	@NotBlank(message = "Category name is mandatory")
 	private String name;
 
 	public CategoryDTO() {

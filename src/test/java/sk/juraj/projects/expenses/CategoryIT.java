@@ -1,8 +1,10 @@
 package sk.juraj.projects.expenses;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,7 @@ import sk.juraj.projects.expenses.dto.CategoryListDTO;
 class CategoryIT extends BaseIT {
 
 	@Test
-	public void checkEmptyCategories() throws Exception {
+	public void addNewCategories() {
 		var categoryA = new CategoryDTO("Health");
 		var categoryB = new CategoryDTO("Groceries");
 		var categoryC = new CategoryDTO("Home");
@@ -26,6 +28,14 @@ class CategoryIT extends BaseIT {
 		
 		var categoryNamesReturnedFromApi = this.restTemplate.getForObject(getUrlBase(), CategoryListDTO.class).getEntityListHolder().stream().map(category -> category.getName()).collect(Collectors.toList());
 		assertTrue(categoryNamesReturnedFromApi.containsAll(List.of("Health", "Groceries", "Home")));
+	}
+	
+	@Test
+	public void addCategoryWithEmptyName() {
+		var category = new CategoryDTO("");
+		
+		var response = this.restTemplate.postForObject(getUrlBase(), category, Map.class);
+		assertEquals("Category name is mandatory", response.get("name"));
 	}
 
 	@Override

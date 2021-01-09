@@ -35,5 +35,5 @@ public class ApplicationConfig {
 		modelMapper.addConverter(new ToCategoryConverter());
 		modelMapper.addConverter(new ToCategoryDTOConverter());
 	}
-
+	
 }

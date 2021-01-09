@@ -19,6 +19,13 @@ public class CategoryService {
 	}
 
 	public Category addNewCategory(Category category) {
+		if(category == null) {
+			throw new IllegalArgumentException("Cannot save null category");
+		}
+		var existingCategory = categoryRepository.findByName(category.getName());
+		if(existingCategory.isPresent()) {
+			throw new IllegalArgumentException("Category with name " + category.getName() + " already exists");
+		}
 		return categoryRepository.save(category);
 	}
 
