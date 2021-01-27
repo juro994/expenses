@@ -49,6 +49,9 @@ export default Vue.extend({
       })
         .then((response) => response.json())
         .then((data) => {
+          if (data.status && data.status !== 'OK') {
+            alert(data.message)
+          }
           if (data.name) {
             this.fetchCategories()
           }

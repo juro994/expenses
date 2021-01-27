@@ -9,7 +9,7 @@
 		<version>2.2.6.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	
+
 	<groupId>sk.juraj.projects</groupId>
 	<artifactId>expenses</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
@@ -27,5 +27,16 @@
 		<module>backend</module>
 	</modules>
 
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 
 </project>

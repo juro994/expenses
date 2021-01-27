@@ -10,7 +10,8 @@ public class ToCategoryConverter extends AbstractConverter<CategoryDTO, Category
 	@Override
 	protected Category convert(CategoryDTO source) {
 		Category category = new Category();
-		category.setName(source.getName());
+		var trimmedName = source.getName().trim();
+		category.setName(trimmedName);
 		return category;
 	}
 
