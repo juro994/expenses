@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 
 import sk.juraj.projects.expenses.controller.CategoryController;
 import sk.juraj.projects.expenses.dto.CategoryDTO;
@@ -37,7 +38,9 @@ class CategoryIT extends BaseIT {
 		var category = new CategoryDTO("");
 		
 		var response = this.restTemplate.postForObject(getUrlBase(), category, Map.class);
-		assertEquals("Category name is mandatory", response.get("name"));
+		System.out.println(response);
+		assertEquals(HttpStatus.BAD_REQUEST.name(), response.get("status"));
+		assertEquals("Category name is mandatory", response.get("message"));
 	}
 
 	@Override
