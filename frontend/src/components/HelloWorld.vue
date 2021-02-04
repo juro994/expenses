@@ -1,23 +1,31 @@
 <template>
   <div class="hello">
     <h1>Categories</h1>
+    <div class="categories-with-expenses">
     <template v-for="category in categories">
-      <p v-bind:key="category.name">{{ category.name }}</p>
+      <category-with-expenses v-bind:key="category.name" v-bind:category="category" />
     </template>
-    <input v-model="newCategoryName" />
-    <button v-on:click="postNewCategory">
-      +
-    </button>
+    <form @submit.prevent="postNewCategory">
+      <input type="text" v-model="newCategoryName" />
+      <button type="submit">
+        +
+      </button>
+    </form>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
+import CategoryWithExpenses from './CategoryWithExpenses.vue'
 
 export default Vue.extend({
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  components: {
+    CategoryWithExpenses
   },
   data () {
     return {
@@ -30,17 +38,19 @@ export default Vue.extend({
   },
   methods: {
     fetchCategories () {
-      fetch('http://localhost:8080/expenses/categories/')
+      console.log(process.env.VUE_APP_API_URL)
+      fetch(process.env.VUE_APP_API_URL + 'categories/')
         .then((response) => response.json())
         .then((data) => {
           this.categories = data
         })
     },
     postNewCategory () {
+      console.log('Hello world')
       const categoryToPost = {
         name: this.newCategoryName
       }
-      fetch('http://localhost:8080/expenses/categories/', {
+      fetch(process.env.VUE_APP_API_URL + 'categories/', {
         method: 'POST',
         body: JSON.stringify(categoryToPost),
         headers: {
@@ -76,5 +86,8 @@ li {
 }
 a {
   color: #42b983;
+}
+.categories-with-expenses {
+  display: flex;
 }
 </style>

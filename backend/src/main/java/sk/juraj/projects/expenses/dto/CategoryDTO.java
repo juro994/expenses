@@ -1,5 +1,7 @@
 package sk.juraj.projects.expenses.dto;
 
+import java.util.List;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
@@ -11,6 +13,8 @@ public class CategoryDTO {
 		    message = "Only words and digits are accepted in Category's name"
 		    ) 
 	private String name;
+	
+	private List<ExpenseDTO> expenses;
 
 	public CategoryDTO() {
 
@@ -26,6 +30,14 @@ public class CategoryDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public List<ExpenseDTO> getExpenses() {
+		return expenses;
+	}
+
+	public void setExpenses(List<ExpenseDTO> expenses) {
+		this.expenses = expenses;
 	}
 
 }
