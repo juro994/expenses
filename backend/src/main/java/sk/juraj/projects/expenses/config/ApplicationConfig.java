@@ -9,6 +9,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import sk.juraj.projects.expenses.converter.ToCategoryConverter;
 import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
+import sk.juraj.projects.expenses.converter.ToExpenseConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -36,6 +37,7 @@ public class ApplicationConfig {
 	private void addConverters(ModelMapper modelMapper) {
 		modelMapper.addConverter(new ToCategoryConverter());
 		modelMapper.addConverter(new ToCategoryDTOConverter());
+		modelMapper.addConverter(new ToExpenseConverter());
 	}
 	
 	@Bean

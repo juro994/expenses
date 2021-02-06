@@ -7,6 +7,8 @@ import javax.validation.constraints.Pattern;
 
 public class CategoryDTO {
 	
+	private Long id;
+	
 	@NotBlank(message = "Category name is mandatory")
 	@Pattern(
 		    regexp = "^[\\w\\d\\s]*$", 
@@ -22,6 +24,14 @@ public class CategoryDTO {
 
 	public CategoryDTO(String name) {
 		this.name = name;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	public String getName() {

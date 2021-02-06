@@ -1,6 +1,7 @@
 package sk.juraj.projects.expenses.dto;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 public class ExpenseDTO {
 	
@@ -8,6 +9,8 @@ public class ExpenseDTO {
 	private String name;
 	
 	private BigDecimal amount;
+	
+	private LocalDateTime modified;
 	
 	public ExpenseDTO() {
 		
@@ -33,8 +36,14 @@ public class ExpenseDTO {
 	public void setAmount(BigDecimal amount) {
 		this.amount = amount;
 	}
-	
-	
+
+	public LocalDateTime getModified() {
+		return modified;
+	}
+
+	public void setModified(LocalDateTime modified) {
+		this.modified = modified;
+	}
 	
 
 }

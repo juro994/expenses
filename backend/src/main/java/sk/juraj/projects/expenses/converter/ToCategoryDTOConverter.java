@@ -17,6 +17,7 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 	@Override
 	protected CategoryDTO convert(Category source) {
 		var categoryDTO = new CategoryDTO();
+		categoryDTO.setId(source.getId());
 		categoryDTO.setName(source.getName());
 		convertExpenses(categoryDTO, source);
 		return categoryDTO;
@@ -31,6 +32,7 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 		var target = new ExpenseDTO();
 		target.setName(source.getTitle());
 		target.setAmount(source.getAmount());
+		target.setModified(source.getModified());
 		return target;
 	}
 

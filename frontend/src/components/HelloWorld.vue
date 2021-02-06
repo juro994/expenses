@@ -1,16 +1,12 @@
 <template>
   <div class="hello">
-    <h1>Categories</h1>
+    <h1>My Expenses</h1>
     <div class="categories-with-expenses">
-    <template v-for="category in categories">
-      <category-with-expenses v-bind:key="category.name" v-bind:category="category" />
-    </template>
-    <form @submit.prevent="postNewCategory">
-      <input type="text" v-model="newCategoryName" />
-      <button type="submit">
-        +
-      </button>
-    </form>
+      <template v-for="category in categories">
+        <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:key="category.name" v-bind:category="category" />
+      </template>
+      <button @click="$refs.addCategoryModal.openModal()">+</button>
+      <add-category-dialog v-on:newCategoryAdded="fetchCategories" ref="addCategoryModal"/>
     </div>
   </div>
 </template>
@@ -18,19 +14,19 @@
 <script lang="ts">
 import Vue from 'vue'
 import CategoryWithExpenses from './CategoryWithExpenses.vue'
+import AddCategoryDialog from './AddCategoryDialog.vue'
 
 export default Vue.extend({
   name: 'HelloWorld',
   props: {
-    msg: String
   },
   components: {
-    CategoryWithExpenses
+    CategoryWithExpenses,
+    AddCategoryDialog
   },
   data () {
     return {
-      categories: [],
-      newCategoryName: ''
+      categories: []
     }
   },
   mounted () {
@@ -43,28 +39,6 @@ export default Vue.extend({
         .then((response) => response.json())
         .then((data) => {
           this.categories = data
-        })
-    },
-    postNewCategory () {
-      console.log('Hello world')
-      const categoryToPost = {
-        name: this.newCategoryName
-      }
-      fetch(process.env.VUE_APP_API_URL + 'categories/', {
-        method: 'POST',
-        body: JSON.stringify(categoryToPost),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status && data.status !== 'OK') {
-            alert(data.message)
-          }
-          if (data.name) {
-            this.fetchCategories()
-          }
         })
     }
   }
@@ -89,5 +63,6 @@ a {
 }
 .categories-with-expenses {
   display: flex;
+  flex-wrap: wrap;
 }
 </style>
