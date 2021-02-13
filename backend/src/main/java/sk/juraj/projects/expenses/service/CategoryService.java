@@ -1,5 +1,9 @@
 package sk.juraj.projects.expenses.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +21,12 @@ public class CategoryService {
 
 	public List<Category> getAllCategories() {
 		return categoryRepository.findAll();
+	}
+	
+	public List<Category> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
+		var firstDayOfMonth = LocalDateTime.of(year, month, 1, 0, 0);
+		var lastDayOfMonth = firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth());
+		return categoryRepository.findByExpensesModifiedBetween(firstDayOfMonth, lastDayOfMonth);
 	}
 
 	public Category addNewCategory(Category category) {

@@ -1,5 +1,6 @@
 package sk.juraj.projects.expenses.entity;
 
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -23,7 +24,7 @@ public class Category {
 	private String name;
 	
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private Set<Expense> expenses;
+	private List<Expense> expenses;
 
 	public Category() {
 
@@ -49,11 +50,11 @@ public class Category {
 		this.name = name;
 	}
 
-	public Set<Expense> getExpenses() {
+	public List<Expense> getExpenses() {
 		return expenses;
 	}
 
-	public void setExpenses(Set<Expense> expenses) {
+	public void setExpenses(List<Expense> expenses) {
 		this.expenses = expenses;
 	}
 

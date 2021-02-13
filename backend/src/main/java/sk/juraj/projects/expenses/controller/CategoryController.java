@@ -1,25 +1,20 @@
 package sk.juraj.projects.expenses.controller;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import sk.juraj.projects.expenses.dto.CategoryDTO;
@@ -39,10 +34,17 @@ public class CategoryController {
 	
 	@Autowired
 	private ModelMapper modelMapper;
-
+	
 	@GetMapping
-	public ResponseEntity<List<CategoryDTO>> getCategories() {
-		var categories = categoryService.getAllCategories();
+	public ResponseEntity<List<CategoryDTO>> getCategoriesWithExpensesFromDate(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
+		//TODO validate month and year
+		var categories = (List<Category>) null;
+		if(year.isPresent() && month.isPresent()) {
+			categories = categoryService.getAllCategoriesWithExpensesForDate(year.get(), month.get());
+		} else {
+			categories = categoryService.getAllCategories();
+		}
+		
 		var categoryDTOs = categories.stream().map(c -> modelMapper.map(c, CategoryDTO.class)).collect(Collectors.toList());
 		return ResponseEntity.ok(categoryDTOs);
 	}

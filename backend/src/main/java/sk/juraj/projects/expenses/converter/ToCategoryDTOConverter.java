@@ -24,7 +24,7 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 	}
 	
 	private void convertExpenses(CategoryDTO target, Category source) {
-		var expenseDTOs = Optional.ofNullable(source.getExpenses()).orElseGet(Collections::emptySet).stream().map(expense -> convertExpense(expense)).collect(Collectors.toList());
+		var expenseDTOs = Optional.ofNullable(source.getExpenses()).orElseGet(Collections::emptyList).stream().map(expense -> convertExpense(expense)).collect(Collectors.toList());
 		target.setExpenses(expenseDTOs);
 	}
 	
