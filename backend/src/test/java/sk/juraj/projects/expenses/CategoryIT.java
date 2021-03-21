@@ -14,7 +14,6 @@ import org.springframework.http.HttpStatus;
 
 import sk.juraj.projects.expenses.controller.CategoryController;
 import sk.juraj.projects.expenses.dto.CategoryDTO;
-import sk.juraj.projects.expenses.dto.CategoryListDTO;
 
 class CategoryIT extends BaseIT {
 

@@ -16,6 +16,12 @@ public class CategoryDTO {
 		    ) 
 	private String name;
 	
+	@Pattern(
+		    regexp = "^#[0-9A-F]{6}$", 
+		    message = "Wrong color code format provided. Use hexadecimal color code with preceeding # sign"
+		    ) 
+	private String colorCode;
+	
 	private List<ExpenseDTO> expenses;
 
 	public CategoryDTO() {
@@ -24,6 +30,11 @@ public class CategoryDTO {
 
 	public CategoryDTO(String name) {
 		this.name = name;
+	}
+	
+	public CategoryDTO(String name, String colorCode) {
+		this.name = name;
+		this.colorCode = colorCode;
 	}
 
 	public Long getId() {
@@ -40,6 +51,14 @@ public class CategoryDTO {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
 	}
 
 	public List<ExpenseDTO> getExpenses() {

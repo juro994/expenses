@@ -5,19 +5,19 @@
       <template v-for="category in categories">
         <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:key="category.name" v-bind:category="category" />
       </template>
-      <button @click="$refs.addCategoryModal.openModal()">+</button>
+      <button class="add-category-button shadow-effect" @click="$refs.addCategoryModal.openModal()">+</button>
       <add-category-dialog v-on:newCategoryAdded="fetchCategories" ref="addCategoryModal"/>
     </div>
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import CategoryWithExpenses from './CategoryWithExpenses.vue'
 import AddCategoryDialog from './AddCategoryDialog.vue'
 
 export default Vue.extend({
-  name: 'HelloWorld',
+  name: 'Main',
   props: {
   },
   components: {
@@ -64,5 +64,33 @@ a {
 .categories-with-expenses {
   display: flex;
   flex-wrap: wrap;
+}
+
+.add-category-button {
+  border-radius: 100%;
+  border: 1px solid white;
+  background-color: gainsboro;
+  color: white;
+  height: 30px;
+  width: 30px;
+  margin: 10px;
+}
+
+.add-category-button:hover {
+  filter: brightness(105%);
+}
+.add-category-button:active {
+  filter: brightness(95%);
+}
+
+.shadow-effect {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+}
+
+/* On mouse-over, add a deeper shadow */
+.shadow-effect:hover {
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
 }
 </style>

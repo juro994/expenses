@@ -1,7 +1,6 @@
 package sk.juraj.projects.expenses.converter;
 
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -19,6 +18,7 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 		var categoryDTO = new CategoryDTO();
 		categoryDTO.setId(source.getId());
 		categoryDTO.setName(source.getName());
+		categoryDTO.setColorCode(source.getColorCode());
 		convertExpenses(categoryDTO, source);
 		return categoryDTO;
 	}

@@ -1,7 +1,6 @@
 package sk.juraj.projects.expenses.entity;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,13 +24,20 @@ public class Category {
 	
 	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Expense> expenses;
+	
+	private String colorCode;
 
 	public Category() {
 
 	}
-
+	
 	public Category(String name) {
 		this.name = name;
+	}
+
+	public Category(String name, String colorCode) {
+		this.name = name;
+		this.colorCode = colorCode;
 	}
 
 	public Long getId() {
@@ -57,11 +63,21 @@ public class Category {
 	public void setExpenses(List<Expense> expenses) {
 		this.expenses = expenses;
 	}
+	
+
+	public String getColorCode() {
+		return colorCode;
+	}
+
+	public void setColorCode(String colorCode) {
+		this.colorCode = colorCode;
+	}
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", expenses=" + expenses + "]";
+		return "Category [id=" + id + ", name=" + name + ", expenses=" + expenses + ", colorCode=" + colorCode + "]";
 	}
+
 	
 	
 

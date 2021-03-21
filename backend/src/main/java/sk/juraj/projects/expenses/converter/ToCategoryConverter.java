@@ -12,6 +12,11 @@ public class ToCategoryConverter extends AbstractConverter<CategoryDTO, Category
 		Category category = new Category();
 		var trimmedName = source.getName().trim();
 		category.setName(trimmedName);
+		final String colorCode = source.getColorCode();
+		if(colorCode != null && !colorCode.isEmpty()) {
+			category.setColorCode(colorCode);
+		}
+		category.setColorCode(source.getColorCode());
 		return category;
 	}
 

@@ -3,7 +3,7 @@
     <div class="modal" v-if="show">
       <div class="modal__backdrop" @click="closeModal()"/>
 
-      <div class="modal__dialog">
+      <div class="shadow-effect modal__dialog" :style="cssVars">
         <div class="modal__header">
           <slot name="header"/>
           <button type="button" class="modal__close" @click="closeModal()">
@@ -19,11 +19,6 @@
         <div class="modal__body">
           <slot name="body"/>
         </div>
-
-        <div class="modal__footer">
-          <button @click="closeModal">Cancel</button>
-          <button @click="closeModal">Save</button>
-        </div>
       </div>
     </div>
   </transition>
@@ -32,6 +27,12 @@
 <script>
 export default {
   name: 'Modal',
+  props: {
+    backgroundColor: {
+      type: String,
+      default: '#ffffff'
+    }
+  },
   data () {
     return {
       show: false
@@ -43,6 +44,21 @@ export default {
     },
     openModal () {
       this.show = true
+    }
+  },
+  computed: {
+    textColor () {
+      if (this.backgroundColor === '#ffffff') {
+        return '#000000'
+      } else {
+        return '#ffffff'
+      }
+    },
+    cssVars () {
+      return {
+        '--background-color': this.backgroundColor,
+        '--text-color': this.textColor
+      }
     }
   }
 }
@@ -69,13 +85,13 @@ export default {
     z-index: 1;
 }
 .modal__dialog {
-    background-color: #ffffff;
+    color: var(--text-color);
+    background-color: var(--background-color);
     position: relative;
     width: 600px;
     margin: 50px auto;
     display: flex;
     flex-direction: column;
-    border-radius: 5px;
     z-index: 2;
 }
 .modal__close {
@@ -97,5 +113,11 @@ export default {
 }
 .modal__footer {
     padding: 10px 20px 20px;
+}
+
+.shadow-effect {
+  /* Add shadows to create the "card" effect */
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
 }
 </style>

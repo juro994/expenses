@@ -1,17 +1,17 @@
 <template>
   <div id="app">
-    <HelloWorld />
+    <Main />
   </div>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
-import HelloWorld from './components/HelloWorld.vue'
+import Main from './components/Main.vue'
 
 export default Vue.extend({
   name: 'App',
   components: {
-    HelloWorld
+    Main
   }
 })
 </script>

@@ -24,9 +24,7 @@ public class CategoryService {
 	}
 	
 	public List<Category> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
-		var firstDayOfMonth = LocalDateTime.of(year, month, 1, 0, 0);
-		var lastDayOfMonth = firstDayOfMonth.with(TemporalAdjusters.lastDayOfMonth());
-		return categoryRepository.findByExpensesModifiedBetween(firstDayOfMonth, lastDayOfMonth);
+		return categoryRepository.findByExpensesModifiedInYearAndMonth(year, month);
 	}
 
 	public Category addNewCategory(Category category) {

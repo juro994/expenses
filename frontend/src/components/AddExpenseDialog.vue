@@ -16,7 +16,7 @@
       </modal>
 </template>
 
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import Modal from './Modal.vue'
 
@@ -36,7 +36,7 @@ export default Vue.extend({
   },
   methods: {
     openModal () {
-      const modal = this.$refs.modal as any
+      const modal = this.$refs.modal
       modal.openModal()
     },
     postNewExpense () {
@@ -58,7 +58,7 @@ export default Vue.extend({
           }
           if (data.name) {
             this.$emit('newExpenseAdded')
-            const modal = this.$refs.modal as any
+            const modal = this.$refs.modal
             modal.closeModal()
           }
         })

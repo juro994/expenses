@@ -38,7 +38,7 @@ public class CategoryServiceTest {
 	
 	@Test
 	void testGetAllCategoriesIfCategoryPresent() {
-		when(categoryRepository.findAll()).thenReturn(List.of(new Category(CATEGORY_NAME)));
+		when(categoryRepository.findAll()).thenReturn(List.of(new Category(CATEGORY_NAME, "#ffffff")));
 		
 		var categories = this.categoryService.getAllCategories();
 		
