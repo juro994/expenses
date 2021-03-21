@@ -9,4 +9,6 @@ This is going to be a multi-tier (n-tier) Spring application for managing my exp
 * Frontend in Typescript, using either React or Vue (with an electron version in place)
 
 ***
-The project is still under development.
+The project is still under development. However, basic functionality is implemented. On top of that, overall direction for look and feel of the UI is set. Current state of the UI:
+
+![alt text](current_state_UI.png "Current UI state")
