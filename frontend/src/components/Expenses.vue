@@ -69,5 +69,5 @@ td, th {
   width: 20%;
 }
 
-tr:nth-child(even):not(td) {background-color: var(--lighter-background-color);}
+tr:nth-child(even):not(td) {background-color: var(--darker-background-color);}
 </style>

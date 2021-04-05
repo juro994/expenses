@@ -14,7 +14,7 @@ public interface CategoryRepository extends JpaRepository<Category, Long> {
 	
 	Optional<Category> findByName(String name);
 	
-	@Query("select c from Category c join fetch c.expenses as exp where year(exp.modified) = ?1 and month(exp.modified) = ?2")
+	@Query("select distinct c from Category c join fetch c.expenses as exp where year(exp.modified) = ?1 and month(exp.modified) = ?2")
 	List<Category> findByExpensesModifiedInYearAndMonth(Integer year, Integer month);
 
 	

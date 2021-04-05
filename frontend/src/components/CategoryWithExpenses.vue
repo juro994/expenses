@@ -54,7 +54,8 @@ export default Vue.extend({
     cssVars () {
       return {
         '--background-color': this.category.colorCode,
-        '--lighter-background-color': this.adjust(this.category.colorCode, 40)
+        '--darker-background-color': this.adjust(this.category.colorCode, -20),
+        '--lighter-background-color': this.adjust(this.category.colorCode, 20)
       }
     }
   }
@@ -84,10 +85,10 @@ export default Vue.extend({
 }
 
 .add-expense-button:hover {
-  filter: brightness(105%);
+  background-color: var(--lighter-background-color);
 }
 .add-expense-button:active {
-  filter: brightness(95%);
+  background-color: var(--darker-background-color);
 }
 .shadow-effect {
   /* Add shadows to create the "card" effect */

@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <h1>My Expenses</h1>
+    <h1>My Expenses for {{monthName}} {{year}}</h1>
     <div class="categories-with-expenses">
       <template v-for="category in categories">
         <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:key="category.name" v-bind:category="category" />
@@ -26,20 +26,34 @@ export default Vue.extend({
   },
   data () {
     return {
-      categories: []
+      categories: [],
+      month: null,
+      year: null
     }
   },
   mounted () {
+    this.setDefaultMonthAndYear()
     this.fetchCategories()
   },
   methods: {
     fetchCategories () {
       console.log(process.env.VUE_APP_API_URL)
-      fetch(process.env.VUE_APP_API_URL + 'categories/')
+      fetch(process.env.VUE_APP_API_URL + 'categories?year=' + this.year + '&month=' + (this.month + 1))
         .then((response) => response.json())
         .then((data) => {
           this.categories = data
         })
+    },
+    setDefaultMonthAndYear () {
+      const today = new Date()
+      this.month = today.getMonth()
+      this.year = today.getFullYear()
+    }
+  },
+  computed: {
+    monthName () {
+      // today.toLocaleString('en-US', { month: 'long' })
+      return 'March'
     }
   }
 })
