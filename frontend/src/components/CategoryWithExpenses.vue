@@ -1,21 +1,24 @@
 <template>
-  <div class="category-with-expenses shadow-effect" :style="cssVars">
-    <div class="card-title">
-      <h2>{{ category.name }}</h2>
-    </div>
-    <add-expense-dialog
+  <v-card class="ma-2">
+    <v-card-title class="headline" v-text="category.name">
+    </v-card-title>
+    <v-card-text>
+      <expenses :expenses="category.expenses" />
+    </v-card-text>
+    <v-card-actions>
+      <add-expense-dialog
       v-on:newExpenseAdded="fetchCategories"
       ref="addExpenseModal"
       :category="category"
     />
-    <expenses :expenses="category.expenses" />
-    <button
-      class="add-expense-button"
-      @click="$refs.addExpenseModal.openModal()"
-    >
-      +
-    </button>
-  </div>
+    </v-card-actions>
+    <v-progress-linear
+        absolute
+        bottom
+        :color="spendingColor"
+        :value="percentageOfBudgetSpent"
+      ></v-progress-linear>
+  </v-card>
 </template>
 
 <script>
@@ -24,9 +27,8 @@ import Expenses from './Expenses.vue'
 import AddExpenseDialog from './AddExpenseDialog.vue'
 
 export default Vue.extend({
-  name: 'HelloWorld',
   props: {
-    category: Object
+    category: {}
   },
   components: {
     Expenses,
@@ -51,54 +53,21 @@ export default Vue.extend({
     }
   },
   computed: {
-    cssVars () {
-      return {
-        '--background-color': this.category.colorCode,
-        '--darker-background-color': this.adjust(this.category.colorCode, -20),
-        '--lighter-background-color': this.adjust(this.category.colorCode, 20)
+    percentageOfBudgetSpent () {
+      const totalAmount = this.category.expenses.reduce((a, b) => a + b.amount, 0)
+      const percentageSpent = (totalAmount / this.category.monthlyBudget) * 100
+      return percentageSpent
+    },
+    spendingColor () {
+      if (this.percentageOfBudgetSpent < 70) {
+        return 'green'
+      } else if (this.percentageOfBudgetSpent >= 70 && this.percentageOfBudgetSpent < 85) {
+        return 'orange'
+      } else {
+        return 'red'
       }
     }
   }
 })
+
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-[draggable=true] {
-  cursor: move;
-}
-
-.category-with-expenses {
-  margin: 10px;
-  background-color: var(--background-color);
-  flex-basis: 300px;
-}
-.add-expense-button {
-  border-radius: 100%;
-  border: 1px solid white;
-  background-color: var(--background-color);
-  filter: brightness(95%);
-  color: white;
-  height: 30px;
-  width: 30px;
-  margin: 10px;
-}
-
-.add-expense-button:hover {
-  background-color: var(--lighter-background-color);
-}
-.add-expense-button:active {
-  background-color: var(--darker-background-color);
-}
-.shadow-effect {
-  /* Add shadows to create the "card" effect */
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-}
-
-/* On mouse-over, add a deeper shadow */
-.shadow-effect:hover {
-  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
-}
-
-</style>

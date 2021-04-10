@@ -1,5 +1,6 @@
 package sk.juraj.projects.expenses.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.constraints.NotBlank;
@@ -21,6 +22,8 @@ public class CategoryDTO {
 		    message = "Wrong color code format provided. Use hexadecimal color code with preceeding # sign"
 		    ) 
 	private String colorCode;
+	
+	private BigDecimal monthlyBudget;
 	
 	private List<ExpenseDTO> expenses;
 
@@ -68,5 +71,14 @@ public class CategoryDTO {
 	public void setExpenses(List<ExpenseDTO> expenses) {
 		this.expenses = expenses;
 	}
+
+	public BigDecimal getMonthlyBudget() {
+		return monthlyBudget;
+	}
+
+	public void setMonthlyBudget(BigDecimal monthlyBudget) {
+		this.monthlyBudget = monthlyBudget;
+	}
+	
 
 }

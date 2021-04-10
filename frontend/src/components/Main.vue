@@ -1,14 +1,31 @@
 <template>
-  <div class="hello">
-    <h1>My Expenses for {{monthName}} {{year}}</h1>
-    <div class="categories-with-expenses">
-      <template v-for="category in categories">
-        <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:key="category.name" v-bind:category="category" />
-      </template>
-      <button class="add-category-button shadow-effect" @click="$refs.addCategoryModal.openModal()">+</button>
-      <add-category-dialog v-on:newCategoryAdded="fetchCategories" ref="addCategoryModal"/>
-    </div>
-  </div>
+  <v-app>
+    <v-app-bar app>
+      <v-spacer></v-spacer>
+      <v-btn
+        icon
+      >
+        <v-icon>mdi-arrow-left-circle</v-icon>
+      </v-btn>
+      <v-toolbar-title>{{monthName}} {{year}}</v-toolbar-title>
+      <v-btn
+        icon
+      >
+        <v-icon>mdi-arrow-right-circle</v-icon>
+      </v-btn>
+      <v-spacer></v-spacer>
+    </v-app-bar>
+    <v-main>
+      <v-container fluid>
+        <v-row class="mx-md-10 mt-md-5">
+          <v-col cols="12" lg="3" md="4" sm="6" xs="12" v-for="category in categories" v-bind:key="category.name">
+            <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:category="category" />
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-main>
+    <add-category-dialog v-on:newCategoryAdded="fetchCategories" ref="addCategoryModal"/>
+  </v-app>
 </template>
 
 <script>
@@ -38,7 +55,7 @@ export default Vue.extend({
   methods: {
     fetchCategories () {
       console.log(process.env.VUE_APP_API_URL)
-      fetch(process.env.VUE_APP_API_URL + 'categories?year=' + this.year + '&month=' + (this.month + 1))
+      fetch(process.env.VUE_APP_API_URL + 'categories')
         .then((response) => response.json())
         .then((data) => {
           this.categories = data
@@ -52,59 +69,9 @@ export default Vue.extend({
   },
   computed: {
     monthName () {
-      // today.toLocaleString('en-US', { month: 'long' })
-      return 'March'
+      const today = new Date()
+      return today.toLocaleString('en-US', { month: 'long' })
     }
   }
 })
 </script>
-
-<!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
-.categories-with-expenses {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.add-category-button {
-  border-radius: 100%;
-  border: 1px solid white;
-  background-color: gainsboro;
-  color: white;
-  height: 30px;
-  width: 30px;
-  margin: 10px;
-}
-
-.add-category-button:hover {
-  filter: brightness(105%);
-}
-.add-category-button:active {
-  filter: brightness(95%);
-}
-
-.shadow-effect {
-  /* Add shadows to create the "card" effect */
-  box-shadow: 0 2px 4px 0 rgba(0,0,0,0.2);
-  transition: 0.3s;
-}
-
-/* On mouse-over, add a deeper shadow */
-.shadow-effect:hover {
-  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
-}
-</style>

@@ -1,44 +1,91 @@
 <template>
-    <modal ref="modal">
-        <template v-slot:header>
-          <h1>Add a new Expense</h1>
-        </template>
-
-        <template v-slot:body>
-          <form @submit.prevent="postNewExpense">
-            <input type="text" v-model="newExpenseName" />
-            <input type="text" v-model="newExpenseAmount" />
-            <button type="submit">
-              +
-            </button>
-        </form>
-        </template>
-      </modal>
+      <v-dialog
+      v-model="dialog"
+      max-width="500px"
+    >
+      <template v-slot:activator="{ on, attrs }">
+        <v-btn v-bind="attrs" v-on="on" icon>
+          <v-icon>mdi-plus-circle</v-icon>
+        </v-btn>
+      </template>
+      <v-card>
+        <v-card-title>
+          <span class="headline">Add a new Expense</span>
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row>
+              <v-col
+                cols="12"
+                sm="12"
+                md="8"
+              >
+                <v-text-field
+                  label="Title*"
+                  required
+                  v-model="newExpenseName"
+                ></v-text-field>
+              </v-col>
+              <v-col
+                cols="12"
+                sm="12"
+                md="4"
+              >
+                <v-text-field
+                  label="Amount*"
+                  required
+                  v-model="newExpenseAmount"
+                >
+                <v-icon
+                  slot="append"
+                >
+                  mdi-currency-eur
+                </v-icon>
+                </v-text-field>
+              </v-col>
+            </v-row>
+          </v-container>
+          <small>*indicates required field</small>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="dialog = false"
+          >
+            Close
+          </v-btn>
+          <v-btn
+            color="blue darken-1"
+            text
+            @click="postNewExpense"
+          >
+            Save
+          </v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 </template>
 
 <script>
 import Vue from 'vue'
-import Modal from './Modal.vue'
 
 export default Vue.extend({
   name: 'addExpenseDialog',
   components: {
-    Modal
   },
   props: {
     category: Object
   },
   data () {
     return {
+      dialog: false,
       newExpenseName: '',
       newExpenseAmount: null
     }
   },
   methods: {
-    openModal () {
-      const modal = this.$refs.modal
-      modal.openModal()
-    },
     postNewExpense () {
       const expenseToPost = {
         name: this.newExpenseName,
@@ -58,8 +105,7 @@ export default Vue.extend({
           }
           if (data.name) {
             this.$emit('newExpenseAdded')
-            const modal = this.$refs.modal
-            modal.closeModal()
+            this.dialog = false
           }
         })
     }

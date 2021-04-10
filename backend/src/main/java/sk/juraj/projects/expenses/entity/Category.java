@@ -1,5 +1,6 @@
 package sk.juraj.projects.expenses.entity;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -26,6 +27,8 @@ public class Category {
 	private List<Expense> expenses;
 	
 	private String colorCode;
+	
+	private BigDecimal monthlyBudget;
 
 	public Category() {
 
@@ -72,13 +75,22 @@ public class Category {
 	public void setColorCode(String colorCode) {
 		this.colorCode = colorCode;
 	}
+	
+
+	public BigDecimal getMonthlyBudget() {
+		return monthlyBudget;
+	}
+
+	public void setMonthlyBudget(BigDecimal monthlyBudget) {
+		this.monthlyBudget = monthlyBudget;
+	}
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", expenses=" + expenses + ", colorCode=" + colorCode + "]";
+		return "Category [id=" + id + ", name=" + name + ", expenses=" + expenses + ", colorCode=" + colorCode
+				+ ", monthlyBudget=" + monthlyBudget + "]";
 	}
 
-	
 	
 
 }

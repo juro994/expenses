@@ -18,6 +18,7 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 		var categoryDTO = new CategoryDTO();
 		categoryDTO.setId(source.getId());
 		categoryDTO.setName(source.getName());
+		categoryDTO.setMonthlyBudget(source.getMonthlyBudget());
 		categoryDTO.setColorCode(source.getColorCode());
 		convertExpenses(categoryDTO, source);
 		return categoryDTO;
