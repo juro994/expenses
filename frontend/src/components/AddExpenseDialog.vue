@@ -89,9 +89,10 @@ export default Vue.extend({
     postNewExpense () {
       const expenseToPost = {
         name: this.newExpenseName,
-        amount: this.newExpenseAmount
+        amount: this.newExpenseAmount,
+        categoryId: this.category.id
       }
-      fetch(process.env.VUE_APP_API_URL + 'categories/' + this.category.id + '/expenses/', {
+      fetch(process.env.VUE_APP_API_URL + 'expenses/', {
         method: 'POST',
         body: JSON.stringify(expenseToPost),
         headers: {

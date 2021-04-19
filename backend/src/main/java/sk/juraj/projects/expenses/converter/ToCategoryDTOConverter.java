@@ -6,6 +6,8 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.AbstractConverter;
 
+import com.google.common.collect.Lists;
+
 import sk.juraj.projects.expenses.dto.CategoryDTO;
 import sk.juraj.projects.expenses.dto.ExpenseDTO;
 import sk.juraj.projects.expenses.entity.Category;
@@ -25,16 +27,15 @@ public class ToCategoryDTOConverter extends AbstractConverter<Category, Category
 	}
 	
 	private void convertExpenses(CategoryDTO target, Category source) {
-		var expenseDTOs = Optional.ofNullable(source.getExpenses()).orElseGet(Collections::emptyList).stream().map(expense -> convertExpense(expense)).collect(Collectors.toList());
-		target.setExpenses(expenseDTOs);
+		target.setExpenses(Lists.newArrayList());
 	}
-	
-	private ExpenseDTO convertExpense(Expense source) {
-		var target = new ExpenseDTO();
-		target.setName(source.getTitle());
-		target.setAmount(source.getAmount());
-		target.setModified(source.getModified());
-		return target;
-	}
+//	
+//	private ExpenseDTO convertExpense(Expense source) {
+//		var target = new ExpenseDTO();
+//		target.setName(source.getTitle());
+//		target.setAmount(source.getAmount());
+//		target.setModified(source.getModified());
+//		return target;
+//	}
 
 }

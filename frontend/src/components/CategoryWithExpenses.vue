@@ -7,10 +7,15 @@
     </v-card-text>
     <v-card-actions>
       <add-expense-dialog
-      v-on:newExpenseAdded="fetchCategories"
-      ref="addExpenseModal"
-      :category="category"
-    />
+        v-on:newExpenseAdded="fetchCategories"
+        ref="addExpenseModal"
+        :category="category"
+      />
+      <v-spacer></v-spacer>
+          <span class="subheading mr-2">Total:</span>
+          <span class="subheading mr-1">{{totalAmountSpent}}</span>
+          <span class="mr-1">/</span>
+          <span class="subheading mr-1">{{category.monthlyBudget}}</span>
     </v-card-actions>
     <v-progress-linear
         absolute
@@ -53,8 +58,11 @@ export default Vue.extend({
     }
   },
   computed: {
+    totalAmountSpent () {
+      return this.category.expenses.reduce((a, b) => a + b.amount, 0)
+    },
     percentageOfBudgetSpent () {
-      const totalAmount = this.category.expenses.reduce((a, b) => a + b.amount, 0)
+      const totalAmount = this.totalAmountSpent
       const percentageSpent = (totalAmount / this.category.monthlyBudget) * 100
       return percentageSpent
     },

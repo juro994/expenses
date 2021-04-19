@@ -4,12 +4,14 @@
       <v-spacer></v-spacer>
       <v-btn
         icon
+        @click="decreaseMonth"
       >
         <v-icon>mdi-arrow-left-circle</v-icon>
       </v-btn>
-      <v-toolbar-title>{{monthName}} {{year}}</v-toolbar-title>
+      <v-toolbar-title>{{currenctDateAsString}}</v-toolbar-title>
       <v-btn
         icon
+        @click="increaseMonth"
       >
         <v-icon>mdi-arrow-right-circle</v-icon>
       </v-btn>
@@ -44,8 +46,7 @@ export default Vue.extend({
   data () {
     return {
       categories: [],
-      month: null,
-      year: null
+      currentDate: null
     }
   },
   mounted () {
@@ -55,22 +56,33 @@ export default Vue.extend({
   methods: {
     fetchCategories () {
       console.log(process.env.VUE_APP_API_URL)
-      fetch(process.env.VUE_APP_API_URL + 'categories')
+      fetch(process.env.VUE_APP_API_URL + 'categories?month=' + (this.currentDate.getMonth() + 1) + '&year=' + this.currentDate.getFullYear())
         .then((response) => response.json())
         .then((data) => {
+          if (data.status && data.status !== 'OK') {
+            this.$router.push('login')
+          }
           this.categories = data
         })
     },
     setDefaultMonthAndYear () {
-      const today = new Date()
-      this.month = today.getMonth()
-      this.year = today.getFullYear()
+      this.currentDate = new Date()
+    },
+    increaseMonth () {
+      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() + 1))
+    },
+    decreaseMonth () {
+      this.currentDate = new Date(this.currentDate.setMonth(this.currentDate.getMonth() - 1))
     }
   },
   computed: {
-    monthName () {
-      const today = new Date()
-      return today.toLocaleString('en-US', { month: 'long' })
+    currenctDateAsString () {
+      return this.currentDate ? this.currentDate.toLocaleString('en-US', { month: 'long', year: 'numeric' }) : ''
+    }
+  },
+  watch: {
+    currentDate: function () {
+      this.fetchCategories()
     }
   }
 })

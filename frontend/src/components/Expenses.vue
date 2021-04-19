@@ -1,6 +1,6 @@
 <template>
   <div v-if="expenses && expenses.length > 0">
-    <v-data-table dense :items="expenses" :headers="headers" hide-default-footer>
+    <v-data-table class="my-awesome-table" :items="expenses" :headers="headers" :mobile-breakpoint="0" hide-default-footer>
       <template v-slot:item.modified="{ item }">
         {{ getFormattedDate(item.modified) }}
     </template>
@@ -19,9 +19,9 @@ export default Vue.extend({
   data () {
     return {
       headers: [
-        { text: 'Name', value: 'name' },
-        { text: 'Modified', value: 'modified' },
-        { text: 'Amount', value: 'amount' }
+        { text: 'Name', value: 'name', width: '70%' },
+        { text: 'Date', value: 'modified', width: '25%' },
+        { text: '€', value: 'amount', width: '10%' }
       ]
     }
   },
@@ -29,8 +29,14 @@ export default Vue.extend({
     getFormattedDate (dateString) {
       const date = new Date(dateString)
       const options = { day: 'numeric', month: 'numeric' }
-      return date.toLocaleDateString('pl-PL', options)
+      return date.toLocaleDateString('sk-SK', options)
     }
   }
 })
 </script>
+
+<style>
+  .my-awesome-table{
+    table-layout : fixed;
+  }
+</style>

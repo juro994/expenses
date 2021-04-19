@@ -13,6 +13,6 @@ import sk.juraj.projects.expenses.entity.Expense;
 public interface ExpenseRepository extends JpaRepository<Expense, Long> {
 	
 	@Query("select e from Expense e where year(e.modified) = ?1 and month(e.modified) = ?2")
-	List<Category> findByModifiedInYearAndMonth(Integer year, Integer month);
+	List<Expense> findByModifiedInYearAndMonth(Integer year, Integer month);
 
 }

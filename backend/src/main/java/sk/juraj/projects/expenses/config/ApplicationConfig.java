@@ -4,12 +4,14 @@ import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import sk.juraj.projects.expenses.converter.ToCategoryConverter;
 import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
 import sk.juraj.projects.expenses.converter.ToExpenseConverter;
+import sk.juraj.projects.expenses.converter.ToExpenseDTOConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -38,6 +40,7 @@ public class ApplicationConfig {
 		modelMapper.addConverter(new ToCategoryConverter());
 		modelMapper.addConverter(new ToCategoryDTOConverter());
 		modelMapper.addConverter(new ToExpenseConverter());
+		modelMapper.addConverter(new ToExpenseDTOConverter());
 	}
 	
 	@Bean

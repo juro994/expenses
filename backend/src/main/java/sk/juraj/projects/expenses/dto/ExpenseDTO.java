@@ -12,6 +12,8 @@ public class ExpenseDTO {
 	
 	private LocalDateTime modified;
 	
+	private Long categoryId;
+	
 	public ExpenseDTO() {
 		
 	}
@@ -43,6 +45,14 @@ public class ExpenseDTO {
 
 	public void setModified(LocalDateTime modified) {
 		this.modified = modified;
+	}
+
+	public Long getCategoryId() {
+		return categoryId;
+	}
+
+	public void setCategoryId(Long categoryId) {
+		this.categoryId = categoryId;
 	}
 	
 

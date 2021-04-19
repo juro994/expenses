@@ -23,8 +23,8 @@ public class Category {
 	@Column(length=30, nullable=false, unique=true)
 	private String name;
 	
-	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Expense> expenses;
+//	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//	private List<Expense> expenses;
 	
 	private String colorCode;
 	
@@ -59,13 +59,13 @@ public class Category {
 		this.name = name;
 	}
 
-	public List<Expense> getExpenses() {
-		return expenses;
-	}
-
-	public void setExpenses(List<Expense> expenses) {
-		this.expenses = expenses;
-	}
+//	public List<Expense> getExpenses() {
+//		return expenses;
+//	}
+//
+//	public void setExpenses(List<Expense> expenses) {
+//		this.expenses = expenses;
+//	}
 	
 
 	public String getColorCode() {
@@ -87,7 +87,7 @@ public class Category {
 
 	@Override
 	public String toString() {
-		return "Category [id=" + id + ", name=" + name + ", expenses=" + expenses + ", colorCode=" + colorCode
+		return "Category [id=" + id + ", name=" + name + ", colorCode=" + colorCode
 				+ ", monthlyBudget=" + monthlyBudget + "]";
 	}
 

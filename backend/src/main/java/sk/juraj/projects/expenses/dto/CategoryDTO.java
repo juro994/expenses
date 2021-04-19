@@ -11,10 +11,6 @@ public class CategoryDTO {
 	private Long id;
 	
 	@NotBlank(message = "Category name is mandatory")
-	@Pattern(
-		    regexp = "^[\\w\\d\\s]*$", 
-		    message = "Only words and digits are accepted in Category's name"
-		    ) 
 	private String name;
 	
 	@Pattern(

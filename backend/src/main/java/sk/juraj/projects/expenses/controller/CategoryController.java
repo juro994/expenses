@@ -38,14 +38,13 @@ public class CategoryController {
 	@GetMapping
 	public ResponseEntity<List<CategoryDTO>> getCategoriesWithExpensesFromDate(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
 		//TODO validate month and year
-		var categories = (List<Category>) null;
+		var categoryDTOs = (List<CategoryDTO>) null;
 		if(year.isPresent() && month.isPresent()) {
-			categories = categoryService.getAllCategoriesWithExpensesForDate(year.get(), month.get());
+			categoryDTOs = categoryService.getAllCategoriesWithExpensesForDate(year.get(), month.get());
 		} else {
-			categories = categoryService.getAllCategories();
+			categoryDTOs = categoryService.getAllCategories();
 		}
 		
-		var categoryDTOs = categories.stream().map(c -> modelMapper.map(c, CategoryDTO.class)).collect(Collectors.toList());
 		return ResponseEntity.ok(categoryDTOs);
 	}
 	

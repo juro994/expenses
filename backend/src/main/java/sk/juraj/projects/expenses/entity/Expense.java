@@ -30,7 +30,7 @@ public class Expense {
 	@Column(length = 128, nullable = false, unique = false)
 	private String title;
 
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "category_id", referencedColumnName = "id")
 	private Category category;
 
