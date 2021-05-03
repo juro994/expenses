@@ -1,20 +1,28 @@
 <template>
-    <Main>
-    </Main>
+  <div id="app">
+    <router-view/>
+  </div>
 </template>
 
-<script>
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Main from './components/Main.vue'
+<style lang="scss">
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
 
-Vue.use(VueRouter)
+#nav {
+  padding: 30px;
 
-export default Vue.extend({
-  name: 'App',
+  a {
+    font-weight: bold;
+    color: #2c3e50;
 
-  components: {
-    Main
+    &.router-link-exact-active {
+      color: #42b983;
+    }
   }
-})
-</script>
+}
+</style>

@@ -74,6 +74,7 @@
 
 <script>
 import Vue from 'vue'
+import {postRequest} from '../utils/httpUtils'
 
 export default Vue.extend({
   name: 'addCategoryDialog',
@@ -95,13 +96,7 @@ export default Vue.extend({
         name: this.newCategoryName,
         monthlyBudget: this.newMonthlyBudget
       }
-      fetch(process.env.VUE_APP_API_URL + 'categories/', {
-        method: 'POST',
-        body: JSON.stringify(categoryToPost),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      postRequest('categories/', categoryToPost)
         .then((response) => response.json())
         .then((data) => {
           if (data.status && data.status !== 'OK') {

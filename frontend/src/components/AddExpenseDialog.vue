@@ -70,6 +70,7 @@
 
 <script>
 import Vue from 'vue'
+import {postRequest} from '../utils/httpUtils'
 
 export default Vue.extend({
   name: 'addExpenseDialog',
@@ -92,13 +93,7 @@ export default Vue.extend({
         amount: this.newExpenseAmount,
         categoryId: this.category.id
       }
-      fetch(process.env.VUE_APP_API_URL + 'expenses/', {
-        method: 'POST',
-        body: JSON.stringify(expenseToPost),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
+      postRequest('expenses/', expenseToPost)
         .then((response) => response.json())
         .then((data) => {
           if (data.status && data.status !== 'OK') {

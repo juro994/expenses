@@ -1,6 +1,9 @@
 <template>
   <v-app>
     <v-app-bar app>
+      <v-btn icon>
+        <v-icon>mdi-account-circle</v-icon>
+      </v-btn>
       <v-spacer></v-spacer>
       <v-btn
         icon
@@ -16,6 +19,9 @@
         <v-icon>mdi-arrow-right-circle</v-icon>
       </v-btn>
       <v-spacer></v-spacer>
+      <v-btn icon>
+        <v-icon>mdi-dots-vertical</v-icon>
+      </v-btn>
     </v-app-bar>
     <v-main>
       <v-container fluid>
@@ -34,6 +40,7 @@
 import Vue from 'vue'
 import CategoryWithExpenses from './CategoryWithExpenses.vue'
 import AddCategoryDialog from './AddCategoryDialog.vue'
+import {getRequest} from '../utils/httpUtils'
 
 export default Vue.extend({
   name: 'Main',
@@ -55,15 +62,20 @@ export default Vue.extend({
   },
   methods: {
     fetchCategories () {
-      console.log(process.env.VUE_APP_API_URL)
-      fetch(process.env.VUE_APP_API_URL + 'categories?month=' + (this.currentDate.getMonth() + 1) + '&year=' + this.currentDate.getFullYear())
-        .then((response) => response.json())
-        .then((data) => {
+      getRequest('categories?month=' + (this.currentDate.getMonth() + 1) + '&year=' + this.currentDate.getFullYear())
+        .then((response) => {
+          if (response.status === 403) {
+            this.$router.push('login')
+          } else {
+            response.json().then((data) => {
           if (data.status && data.status !== 'OK') {
             this.$router.push('login')
           }
           this.categories = data
         })
+          }
+        })
+        
     },
     setDefaultMonthAndYear () {
       this.currentDate = new Date()
