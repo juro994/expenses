@@ -18,10 +18,11 @@ public class ToUserConverter extends AbstractConverter<UserDTO, User> {
 	@Override
 	protected User convert(UserDTO source) {
 		var user = new User();
+		user.setUsername(source.getUsername());
 		user.setFirstName(source.getFirstName());
 		user.setLastName(source.getLastName());
 		user.setPassword(this.passwordEncoder.encode(source.getRawPassword()));
-		return null;
+		return user;
 	}
 
 }

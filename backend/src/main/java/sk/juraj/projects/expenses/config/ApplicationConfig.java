@@ -12,6 +12,7 @@ import sk.juraj.projects.expenses.converter.ToCategoryConverter;
 import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
 import sk.juraj.projects.expenses.converter.ToExpenseConverter;
 import sk.juraj.projects.expenses.converter.ToExpenseDTOConverter;
+import sk.juraj.projects.expenses.converter.ToUserConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -41,6 +42,7 @@ public class ApplicationConfig {
 		modelMapper.addConverter(new ToCategoryDTOConverter());
 		modelMapper.addConverter(new ToExpenseConverter());
 		modelMapper.addConverter(new ToExpenseDTOConverter());
+		modelMapper.addConverter(new ToUserConverter());
 	}
 	
 	@Bean

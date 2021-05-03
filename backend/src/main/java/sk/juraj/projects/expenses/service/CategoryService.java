@@ -11,6 +11,8 @@ import java.util.stream.Stream;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.google.common.collect.Lists;
@@ -19,8 +21,10 @@ import sk.juraj.projects.expenses.dto.CategoryDTO;
 import sk.juraj.projects.expenses.dto.ExpenseDTO;
 import sk.juraj.projects.expenses.entity.Category;
 import sk.juraj.projects.expenses.entity.Expense;
+import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.CategoryRepository;
 import sk.juraj.projects.expenses.repository.ExpenseRepository;
+import sk.juraj.projects.expenses.repository.UserRepository;
 
 @Service
 public class CategoryService {
@@ -32,6 +36,9 @@ public class CategoryService {
 	private ExpenseRepository expenseRepository;
 	
 	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 
 	public List<CategoryDTO> getAllCategories() {
@@ -39,8 +46,12 @@ public class CategoryService {
 	}
 	
 	public List<CategoryDTO> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
-		final var allCategories = categoryRepository.findAll();
-		final var allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month);
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		final var user = userRepository.findByUsername(authentication.getName());
+		
+		final var allCategories = categoryRepository.findByUser(user);
+		final var allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
 		
 		
 		final Map<Category, List<Expense>> expensesByCategory = allExpensesInYearAndMonth.stream().collect(Collectors.groupingBy(Expense::getCategory));
@@ -66,6 +77,11 @@ public class CategoryService {
 		if(existingCategory.isPresent()) {
 			throw new IllegalArgumentException("Category with name " + category.getName() + " already exists");
 		}
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		User user = userRepository.findByUsername(authentication.getName());
+		category.setUser(user);
+		
 		return categoryRepository.save(category);
 	}
 

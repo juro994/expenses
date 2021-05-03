@@ -14,12 +14,15 @@ import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.UserRepository;
 
 @Service
-public class UserSignInService implements UserDetailsService {
+public class UserRegistrationService implements UserDetailsService {
 	
 	@Autowired
 	private UserRepository userRepository;
 	
-	
+	public User saveUser(final User user) {
+		return userRepository.save(user);
+	}
+
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = userRepository.findByUsername(username);
@@ -28,5 +31,8 @@ public class UserSignInService implements UserDetailsService {
         }
         return new AppUserDetails(user);
 	}
+	
+	
+	
 
 }

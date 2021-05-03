@@ -18,6 +18,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import sk.juraj.projects.expenses.config.AppUserDetails;
 import sk.juraj.projects.expenses.config.Constants;
 import sk.juraj.projects.expenses.entity.User;
 
@@ -28,7 +29,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public JWTAuthenticationFilter(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
 
-        setFilterProcessesUrl("/api/services/controller/user/login"); 
+        setFilterProcessesUrl(Constants.SIGN_IN_URL); 
     }
 
     @Override
@@ -55,13 +56,11 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             FilterChain chain,
                                             Authentication auth) throws IOException {
         String token = JWT.create()
-                .withSubject(((User) auth.getPrincipal()).getUsername())
+                .withSubject(((AppUserDetails) auth.getPrincipal()).getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + Constants.EXPIRATION_TIME))
                 .sign(Algorithm.HMAC512(Constants.SECRET.getBytes()));
 
-        String body = ((User) auth.getPrincipal()).getUsername() + " " + token;
-
-        res.getWriter().write(body);
+        res.getWriter().write(token);
         res.getWriter().flush();
     }
 }

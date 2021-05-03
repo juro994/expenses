@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,6 +31,10 @@ public class Category {
 	private String colorCode;
 	
 	private BigDecimal monthlyBudget;
+	
+	@OneToOne
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private User user;
 
 	public Category() {
 
@@ -83,6 +89,14 @@ public class Category {
 
 	public void setMonthlyBudget(BigDecimal monthlyBudget) {
 		this.monthlyBudget = monthlyBudget;
+	}
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

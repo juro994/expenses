@@ -14,15 +14,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import sk.juraj.projects.expenses.filter.JWTAuthenticationFilter;
 import sk.juraj.projects.expenses.filter.JWTAuthorizationFilter;
-import sk.juraj.projects.expenses.service.UserService;
+import sk.juraj.projects.expenses.service.UserSignInService;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private UserService userService;
+	private UserSignInService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
-    public WebSecurityConfig(final UserService userService) {
+    public WebSecurityConfig(final UserSignInService userService) {
 		this.userService = userService;
 		this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
 	}
@@ -30,13 +30,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
     	http.cors().and().authorizeRequests()
-        .antMatchers(HttpMethod.POST, Constants.SIGN_UP_URL).permitAll()
+        .antMatchers(HttpMethod.POST, Constants.SIGN_IN_URL, Constants.REGISTER_URL).permitAll()
         .anyRequest().authenticated()
         .and()
         .addFilter(new JWTAuthenticationFilter(authenticationManager()))
         .addFilter(new JWTAuthorizationFilter(authenticationManager()))
         // this disables session creation on Spring Security
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
     }
     
     @Override

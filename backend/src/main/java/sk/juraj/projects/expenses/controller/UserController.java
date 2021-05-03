@@ -14,24 +14,25 @@ import sk.juraj.projects.expenses.dto.ExpenseDTO;
 import sk.juraj.projects.expenses.dto.UserDTO;
 import sk.juraj.projects.expenses.entity.Expense;
 import sk.juraj.projects.expenses.entity.User;
-import sk.juraj.projects.expenses.service.UserService;
+import sk.juraj.projects.expenses.service.UserRegistrationService;
+import sk.juraj.projects.expenses.service.UserSignInService;
 
 @RestController
 @RequestMapping(UserController.API_PATH)
 public class UserController {
 	
-	public static final String API_PATH = "/users";
+	public static final String API_PATH = "/register";
 	
 	@Autowired
 	private ModelMapper modelMapper;
 	
 	@Autowired
-	private UserService userService;
+	private UserRegistrationService registrationService;
 	
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<Long> postUser(@Valid @RequestBody UserDTO userDTO) {
 		var userToSave = modelMapper.map(userDTO, User.class);
-		var savedUser = userService.saveUser(userToSave);
+		var savedUser = registrationService.saveUser(userToSave);
 		return ResponseEntity.ok(savedUser.getId());
 	}
 

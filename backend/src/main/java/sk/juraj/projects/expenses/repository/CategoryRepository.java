@@ -8,11 +8,14 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import sk.juraj.projects.expenses.entity.Category;
+import sk.juraj.projects.expenses.entity.User;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 	
 	Optional<Category> findByName(String name);
+	
+	Optional<Category> findByUser(User user);
 
 	
 }
