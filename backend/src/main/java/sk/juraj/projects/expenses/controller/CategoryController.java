@@ -36,6 +36,7 @@ public class CategoryController {
 	private ModelMapper modelMapper;
 	
 	@GetMapping
+	@Deprecated
 	public ResponseEntity<List<CategoryDTO>> getCategoriesWithExpensesFromDate(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
 		//TODO validate month and year
 		var categoryDTOs = (List<CategoryDTO>) null;

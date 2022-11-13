@@ -1,10 +1,8 @@
 <template>
-  <v-card class="ma-2">
+  <v-card class="ma-2 elevation-3">
     <v-card-title class="headline" v-text="category.name">
     </v-card-title>
-    <v-card-text>
       <expenses :expenses="category.expenses" />
-    </v-card-text>
     <v-card-actions>
       <add-expense-dialog
         v-on:newExpenseAdded="fetchCategories"

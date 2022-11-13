@@ -29,6 +29,9 @@
           <v-col cols="12" lg="3" md="4" sm="6" xs="12" v-for="category in categories" v-bind:key="category.name">
             <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:category="category" />
           </v-col>
+          <v-col cols="12" lg="3" md="4" sm="6" xs="12">
+            <expenses-summary> </expenses-summary>
+          </v-col>
         </v-row>
       </v-container>
     </v-main>
@@ -40,15 +43,17 @@
 import Vue from 'vue'
 import CategoryWithExpenses from './CategoryWithExpenses.vue'
 import AddCategoryDialog from './AddCategoryDialog.vue'
-import {getRequest} from '../utils/httpUtils'
+import ExpensesSummary from './ExpensesSummary.vue'
+import { getRequest } from '../utils/httpUtils'
 
 export default Vue.extend({
-  name: 'Main',
+  name: 'Home',
   props: {
   },
   components: {
     CategoryWithExpenses,
-    AddCategoryDialog
+    AddCategoryDialog,
+    ExpensesSummary
   },
   data () {
     return {
@@ -68,14 +73,13 @@ export default Vue.extend({
             this.$router.push('login')
           } else {
             response.json().then((data) => {
-          if (data.status && data.status !== 'OK') {
-            this.$router.push('login')
+              if (data.status && data.status !== 'OK') {
+                this.$router.push('login')
+              }
+              this.categories = data
+            })
           }
-          this.categories = data
         })
-          }
-        })
-        
     },
     setDefaultMonthAndYear () {
       this.currentDate = new Date()

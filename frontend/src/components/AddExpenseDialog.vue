@@ -70,7 +70,7 @@
 
 <script>
 import Vue from 'vue'
-import {postRequest} from '../utils/httpUtils'
+import { postRequest } from '../utils/httpUtils'
 
 export default Vue.extend({
   name: 'addExpenseDialog',
