@@ -1,6 +1,5 @@
 package sk.juraj.projects.expenses.config;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -8,11 +7,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import sk.juraj.projects.expenses.converter.ToCategoryConverter;
-import sk.juraj.projects.expenses.converter.ToCategoryDTOConverter;
-import sk.juraj.projects.expenses.converter.ToExpenseConverter;
-import sk.juraj.projects.expenses.converter.ToExpenseDTOConverter;
-import sk.juraj.projects.expenses.converter.ToUserConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -31,21 +25,6 @@ public class ApplicationConfig {
 	}
 	
 	@Bean
-	public ModelMapper modelMapper() {
-		var modelMapper = new ModelMapper();
-		addConverters(modelMapper);
-		return modelMapper;
-	}
-	
-	private void addConverters(ModelMapper modelMapper) {
-		modelMapper.addConverter(new ToCategoryConverter());
-		modelMapper.addConverter(new ToCategoryDTOConverter());
-		modelMapper.addConverter(new ToExpenseConverter());
-		modelMapper.addConverter(new ToExpenseDTOConverter());
-		modelMapper.addConverter(new ToUserConverter());
-	}
-	
-	@Bean
 	public WebMvcConfigurer corsConfigurer() {
 		return new WebMvcConfigurer() {
 			@Override
@@ -53,6 +32,11 @@ public class ApplicationConfig {
 				registry.addMapping("/**").allowedOrigins("http://localhost:8080","http://localhost:8081");
 			}
 		};
+	}
+
+	@Bean
+	public BCryptPasswordEncoder bCryptPasswordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 	
 }

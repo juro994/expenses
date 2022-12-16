@@ -26,16 +26,19 @@
     <v-main>
       <v-container fluid>
         <v-row class="mx-md-10 mt-md-5">
-          <v-col cols="12" lg="3" md="4" sm="6" xs="12" v-for="category in categories" v-bind:key="category.name">
-            <category-with-expenses v-on:newCategoryAdded="fetchCategories" v-bind:category="category" />
+          <v-col cols="12" lg="3" md="4" sm="6" xs="12" v-for="category in monthlyBudget.categories" v-bind:key="category.name">
+            <category-with-expenses v-on:newCategoryAdded="fetchMonthlyData" v-bind:category="category" />
           </v-col>
           <v-col cols="12" lg="3" md="4" sm="6" xs="12">
-            <expenses-summary> </expenses-summary>
+            <income-summary v-on:fetchMonthlyData="fetchMonthlyData" v-bind:incomeItems="monthlyBudget.incomeItems"> </income-summary>
+          </v-col>
+          <v-col cols="12" lg="3" md="4" sm="6" xs="12">
+            <expenses-summary v-bind:totalSpent="monthlyBudget.totalSpent" v-bind:budgetForTheMonth="monthlyBudget.budgetForTheMonth"> </expenses-summary>
           </v-col>
         </v-row>
       </v-container>
     </v-main>
-    <add-category-dialog v-on:newCategoryAdded="fetchCategories" ref="addCategoryModal"/>
+    <add-category-dialog v-on:newCategoryAdded="fetchMonthlyData" ref="addCategoryModal"/>
   </v-app>
 </template>
 
@@ -43,6 +46,7 @@
 import Vue from 'vue'
 import CategoryWithExpenses from './CategoryWithExpenses.vue'
 import AddCategoryDialog from './AddCategoryDialog.vue'
+import IncomeSummary from './IncomeSummary.vue'
 import ExpensesSummary from './ExpensesSummary.vue'
 import { getRequest } from '../utils/httpUtils'
 
@@ -53,21 +57,22 @@ export default Vue.extend({
   components: {
     CategoryWithExpenses,
     AddCategoryDialog,
+    IncomeSummary,
     ExpensesSummary
   },
   data () {
     return {
-      categories: [],
+      monthlyBudget: [],
       currentDate: null
     }
   },
   mounted () {
     this.setDefaultMonthAndYear()
-    this.fetchCategories()
+    this.fetchMonthlyData()
   },
   methods: {
-    fetchCategories () {
-      getRequest('categories?month=' + (this.currentDate.getMonth() + 1) + '&year=' + this.currentDate.getFullYear())
+    fetchMonthlyData () {
+      getRequest('monthlybudget?month=' + (this.currentDate.getMonth() + 1) + '&year=' + this.currentDate.getFullYear())
         .then((response) => {
           if (response.status === 403) {
             this.$router.push('login')
@@ -76,7 +81,7 @@ export default Vue.extend({
               if (data.status && data.status !== 'OK') {
                 this.$router.push('login')
               }
-              this.categories = data
+              this.monthlyBudget = data
             })
           }
         })
@@ -98,7 +103,7 @@ export default Vue.extend({
   },
   watch: {
     currentDate: function () {
-      this.fetchCategories()
+      this.fetchMonthlyData()
     }
   }
 })

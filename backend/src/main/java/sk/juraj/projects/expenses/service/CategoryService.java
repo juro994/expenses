@@ -1,24 +1,19 @@
 package sk.juraj.projects.expenses.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Month;
-import java.time.temporal.TemporalAdjusters;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.google.common.collect.Lists;
-
-import sk.juraj.projects.expenses.dto.CategoryDTO;
-import sk.juraj.projects.expenses.dto.ExpenseDTO;
+import sk.juraj.projects.expenses.dto.CategoryCreateRepresentation;
+import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
+import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
+import sk.juraj.projects.expenses.dto.ImmutableCategoryGetRepresentation;
+import sk.juraj.projects.expenses.dto.ImmutableExpenseGetRepresentation;
 import sk.juraj.projects.expenses.entity.Category;
 import sk.juraj.projects.expenses.entity.Expense;
 import sk.juraj.projects.expenses.entity.User;
@@ -29,6 +24,8 @@ import sk.juraj.projects.expenses.repository.UserRepository;
 @Service
 public class CategoryService {
 
+	private static final String DEFAULT_CATEGORY_COLOR_CODE = "#ffffff";
+
 	@Autowired
 	private CategoryRepository categoryRepository;
 	
@@ -38,38 +35,46 @@ public class CategoryService {
 	@Autowired
 	private UserRepository userRepository;
 	
-	@Autowired
-	private ModelMapper modelMapper;
+	@Transactional(readOnly = true)
+	public List<CategoryGetRepresentation> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		final User user = userRepository.findByUsername(authentication.getName());
+		
+		final List<Category> allCategories = categoryRepository.findByUser(user);
+		final List<Expense> allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
 
-	public List<CategoryDTO> getAllCategories() {
-		return categoryRepository.findAll().stream().map(c -> modelMapper.map(c, CategoryDTO.class)).collect(Collectors.toList());
-	}
-	
-	public List<CategoryDTO> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		final var user = userRepository.findByUsername(authentication.getName());
-		
-		final var allCategories = categoryRepository.findByUser(user);
-		final var allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
-		
-		
-		final Map<Category, List<Expense>> expensesByCategory = allExpensesInYearAndMonth.stream().collect(Collectors.groupingBy(Expense::getCategory));
-		
-		final List<CategoryDTO> allCategoryDTOs = allCategories.stream().map(c -> {
-			return modelMapper.map(c, CategoryDTO.class);
+		return allCategories.stream().map(category -> {
+			List<ExpenseGetRepresentation> allExpensesOfCategory = allExpensesInYearAndMonth.stream()
+			.filter(e -> category.getId().equals(e.getCategory().getId()))
+			.map(this::mapExpenseToExpenseDTO)
+			.collect(Collectors.toList());
+
+			return this.mapCategoryToCategoryGetDTO(category, allExpensesOfCategory);
 		}).collect(Collectors.toList());
-		
-		expensesByCategory.entrySet().stream().forEach(entry -> {
-			var matchedCategoryDTO = allCategoryDTOs.stream().filter(c -> c.getId() == entry.getKey().getId()).findFirst();
-			var expenseDTOs = entry.getValue().stream().map(e -> modelMapper.map(e, ExpenseDTO.class)).collect(Collectors.toList());
-			matchedCategoryDTO.get().setExpenses(expenseDTOs);
-		});
-		
-		return allCategoryDTOs;
 	}
 
-	public Category addNewCategory(Category category) {
+	private ExpenseGetRepresentation mapExpenseToExpenseDTO(final Expense expense) {
+		return ImmutableExpenseGetRepresentation.builder()
+			.amount(expense.getAmount())
+			.modified(expense.getModified())
+			.name(expense.getTitle())
+			.build();
+	}
+
+	private CategoryGetRepresentation mapCategoryToCategoryGetDTO(final Category category, final List<ExpenseGetRepresentation> expenses) {
+		return ImmutableCategoryGetRepresentation.builder()
+			.id(category.getId())
+			.name(category.getName())
+			.monthlyBudget(category.getMonthlyBudget())
+			.colorCode(Optional.ofNullable(category.getColorCode()))
+			.expenses(expenses)
+			.build();
+	}
+
+	@Transactional
+	public CategoryGetRepresentation addNewCategory(CategoryCreateRepresentation categoryDTO) {
+		final Category category = mapCategoryDTOtoCategory(categoryDTO);
 		if(category == null) {
 			throw new IllegalArgumentException("Cannot save null category");
 		}
@@ -82,21 +87,27 @@ public class CategoryService {
 		User user = userRepository.findByUsername(authentication.getName());
 		category.setUser(user);
 		
-		return categoryRepository.save(category);
+		return mapCategoryToCategoryDTO(categoryRepository.save(category)) ;
 	}
 
-	public Category addExpenseToCategory(Long categoryId, Expense expense) {
-		if(categoryId == null) {
-			throw new IllegalArgumentException("Cannot add expense to category with id null");
-		}
-		var category = categoryRepository.findById(categoryId);
-		if(category.isEmpty()) {
-			throw new IllegalArgumentException("Category with id " + categoryId + " doesn't exist");
-		}
-		var existingCategory = category.get();
-		expense.setCategory(existingCategory);
-//		existingCategory.getExpenses().add(expense);
-		return categoryRepository.save(existingCategory);
+	private Category mapCategoryDTOtoCategory(final CategoryCreateRepresentation categoryDTO) {
+		Category category = new Category();
+		var trimmedName = categoryDTO.getName().trim();
+		category.setName(trimmedName);
+		category.setMonthlyBudget(categoryDTO.getMonthlyBudget());
+		category.setColorCode(categoryDTO.getColorCode().orElse(DEFAULT_CATEGORY_COLOR_CODE));
+		return category;
+	}
+
+	private CategoryGetRepresentation mapCategoryToCategoryDTO(final Category category) {
+		var categoryDTO = ImmutableCategoryGetRepresentation.builder()
+		.id(category.getId())
+		.name(category.getName())
+		.monthlyBudget(category.getMonthlyBudget())
+		.colorCode(category.getColorCode())
+		.build();
+
+		return categoryDTO;
 	}
 	
 }

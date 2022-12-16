@@ -1,5 +1,5 @@
 <template>
-  <v-card class="ma-2 elevation-3">
+  <v-card class="ma-2 elevation-3" v-if="totalSpent > 0 && budgetForTheMonth > 0">
     <v-card-title class="headline">
       Summary
     </v-card-title>
@@ -8,10 +8,12 @@
       :rotate="-90"
       :size="100"
       :width="15"
-      :value="70"
+      :value="totalSpent/budgetForTheMonth*100"
       color="primary"
     >
-      1200
+      Spent {{totalSpent}}
+      <br/>
+      of {{budgetForTheMonth}}
     </v-progress-circular>
     </v-card-text>
   </v-card>
@@ -22,7 +24,14 @@ import Vue from 'vue'
 
 export default Vue.extend({
   props: {
-
+    budgetForTheMonth: {
+      type: Number,
+      default: 0
+    },
+    totalSpent: {
+      type: Number,
+      default: 0
+    }
   },
   components: {
 

@@ -30,7 +30,7 @@ public class CategoryServiceTest {
 
 	@Test
 	void testGetAllCategoriesWhenEmpty() {
-		var categories = this.categoryService.getAllCategories();
+		var categories = this.categoryService.getAllCategoriesWithExpensesForDate(2022, 12);
 		
 		assertEquals(0, categories.size());
 		verify(categoryRepository).findAll();
@@ -40,7 +40,7 @@ public class CategoryServiceTest {
 	void testGetAllCategoriesIfCategoryPresent() {
 		when(categoryRepository.findAll()).thenReturn(List.of(new Category(CATEGORY_NAME, "#ffffff")));
 		
-		var categories = this.categoryService.getAllCategories();
+		var categories = this.categoryService.getAllCategoriesWithExpensesForDate(2022, 12);
 		
 		assertEquals(1, categories.size());
 		verify(categoryRepository).findAll();
