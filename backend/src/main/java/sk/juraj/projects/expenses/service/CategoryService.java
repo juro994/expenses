@@ -42,6 +42,11 @@ public class CategoryService {
 		final User user = userRepository.findByUsername(authentication.getName());
 		
 		final List<Category> allCategories = categoryRepository.findByUser(user);
+
+		if(allCategories.isEmpty()) {
+			return List.of();
+		}
+
 		final List<Expense> allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
 
 		return allCategories.stream().map(category -> {
