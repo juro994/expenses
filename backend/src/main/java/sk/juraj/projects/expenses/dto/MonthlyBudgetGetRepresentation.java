@@ -2,7 +2,6 @@ package sk.juraj.projects.expenses.dto;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

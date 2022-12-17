@@ -1,8 +1,6 @@
 package sk.juraj.projects.expenses.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Optional;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;

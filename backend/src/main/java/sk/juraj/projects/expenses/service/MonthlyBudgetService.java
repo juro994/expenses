@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
 import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
@@ -22,6 +23,7 @@ public class MonthlyBudgetService {
     @Autowired
     private IncomeService incomeService;
 
+    @Transactional(readOnly = true)
     public MonthlyBudgetGetRepresentation getMonthlyBudgetOverview(Integer year, Integer month) {
         final List<CategoryGetRepresentation> allCategoriesWithExpensesForDate = categoryService.getAllCategoriesWithExpensesForDate(year, month);
 

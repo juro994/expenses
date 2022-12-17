@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,13 +11,9 @@ import sk.juraj.projects.expenses.dto.CategoryCreateRepresentation;
 import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
 import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
 import sk.juraj.projects.expenses.dto.ImmutableCategoryGetRepresentation;
-import sk.juraj.projects.expenses.dto.ImmutableExpenseGetRepresentation;
 import sk.juraj.projects.expenses.entity.Category;
-import sk.juraj.projects.expenses.entity.Expense;
 import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.CategoryRepository;
-import sk.juraj.projects.expenses.repository.ExpenseRepository;
-import sk.juraj.projects.expenses.repository.UserRepository;
 
 @Service
 public class CategoryService {
@@ -30,16 +24,14 @@ public class CategoryService {
 	private CategoryRepository categoryRepository;
 	
 	@Autowired
-	private ExpenseRepository expenseRepository;
+	private ExpenseRetrievalService expenseRetrievalService;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Transactional(readOnly = true)
 	public List<CategoryGetRepresentation> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		final User user = userRepository.findByUsername(authentication.getName());
+		final User user = userService.getCurrentUser();
 		
 		final List<Category> allCategories = categoryRepository.findByUser(user);
 
@@ -47,34 +39,20 @@ public class CategoryService {
 			return List.of();
 		}
 
-		final List<Expense> allExpensesInYearAndMonth = expenseRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
+		final List<ExpenseGetRepresentation> allExpensesInYearAndMonth = expenseRetrievalService.findByModifiedInYearAndMonth(year, month, user);
 
 		return allCategories.stream().map(category -> {
 			List<ExpenseGetRepresentation> allExpensesOfCategory = allExpensesInYearAndMonth.stream()
-			.filter(e -> category.getId().equals(e.getCategory().getId()))
-			.map(this::mapExpenseToExpenseDTO)
+			.filter(e -> category.getId().equals(e.categoryId()))
 			.collect(Collectors.toList());
 
 			return this.mapCategoryToCategoryGetDTO(category, allExpensesOfCategory);
 		}).collect(Collectors.toList());
 	}
 
-	private ExpenseGetRepresentation mapExpenseToExpenseDTO(final Expense expense) {
-		return ImmutableExpenseGetRepresentation.builder()
-			.amount(expense.getAmount())
-			.modified(expense.getModified())
-			.name(expense.getTitle())
-			.build();
-	}
-
-	private CategoryGetRepresentation mapCategoryToCategoryGetDTO(final Category category, final List<ExpenseGetRepresentation> expenses) {
-		return ImmutableCategoryGetRepresentation.builder()
-			.id(category.getId())
-			.name(category.getName())
-			.monthlyBudget(category.getMonthlyBudget())
-			.colorCode(Optional.ofNullable(category.getColorCode()))
-			.expenses(expenses)
-			.build();
+	@Transactional(readOnly = true)
+	public Category getCategoryById(Long categoryId) {
+		return this.categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException(String.format("Category with id %s doesn't exist", categoryId)));
 	}
 
 	@Transactional
@@ -88,11 +66,20 @@ public class CategoryService {
 			throw new IllegalArgumentException("Category with name " + category.getName() + " already exists");
 		}
 		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		User user = userRepository.findByUsername(authentication.getName());
+		User user = userService.getCurrentUser();
 		category.setUser(user);
 		
 		return mapCategoryToCategoryDTO(categoryRepository.save(category)) ;
+	}
+
+	private CategoryGetRepresentation mapCategoryToCategoryGetDTO(final Category category, final List<ExpenseGetRepresentation> expenses) {
+		return ImmutableCategoryGetRepresentation.builder()
+			.id(category.getId())
+			.name(category.getName())
+			.monthlyBudget(category.getMonthlyBudget())
+			.colorCode(Optional.ofNullable(category.getColorCode()))
+			.expenses(expenses)
+			.build();
 	}
 
 	private Category mapCategoryDTOtoCategory(final CategoryCreateRepresentation categoryDTO) {

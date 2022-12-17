@@ -3,6 +3,7 @@ package sk.juraj.projects.expenses.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -18,5 +19,8 @@ public interface ExpenseGetRepresentation {
 	public BigDecimal getAmount();
 	
 	public LocalDateTime getModified();
+
+	@JsonIgnore
+	public Long categoryId();
     
 }

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import sk.juraj.projects.expenses.dto.UserCreateRepresentation;
-import sk.juraj.projects.expenses.service.UserRegistrationService;
+import sk.juraj.projects.expenses.service.UserService;
 
 @RestController
 @RequestMapping(UserController.API_PATH)
@@ -19,11 +19,11 @@ public class UserController {
 	public static final String API_PATH = "/register";
 	
 	@Autowired
-	private UserRegistrationService registrationService;
+	private UserService userService;
 	
 	@PostMapping(consumes = "application/json")
 	public ResponseEntity<Long> postUser(@Valid @RequestBody UserCreateRepresentation userDTO) {
-		final Long savedUserId = registrationService.saveUser(userDTO);
+		final Long savedUserId = userService.saveUser(userDTO);
 		return ResponseEntity.ok(savedUserId);
 	}
 

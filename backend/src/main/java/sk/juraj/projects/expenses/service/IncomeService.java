@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +13,6 @@ import sk.juraj.projects.expenses.dto.IncomeGetRepresentation;
 import sk.juraj.projects.expenses.entity.Income;
 import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.IncomeRepository;
-import sk.juraj.projects.expenses.repository.UserRepository;
 
 @Service
 public class IncomeService {
@@ -24,12 +21,11 @@ public class IncomeService {
 	private IncomeRepository incomeRepository;
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Transactional
 	public IncomeGetRepresentation addIncome(final IncomeCreateRepresentation incomeCreateRepresentation) {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		final User user = userRepository.findByUsername(authentication.getName());
+		final User user = userService.getCurrentUser();
 
 		final Income incomeSaved = incomeRepository.save(mapIncomeCreateRepresentationToIncome(incomeCreateRepresentation, user));
 
@@ -38,9 +34,7 @@ public class IncomeService {
 
 	@Transactional(readOnly = true)
 	public List<IncomeGetRepresentation> getAllIncomeItemsWithForDate(Integer year, Integer month) {
-		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		final User user = userRepository.findByUsername(authentication.getName());
+		final User user = userService.getCurrentUser();
 		
 		final List<Income> allIncomeItemsInYearAndMonth = incomeRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
 

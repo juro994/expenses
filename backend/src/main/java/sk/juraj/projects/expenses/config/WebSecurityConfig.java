@@ -14,15 +14,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import sk.juraj.projects.expenses.filter.JWTAuthenticationFilter;
 import sk.juraj.projects.expenses.filter.JWTAuthorizationFilter;
-import sk.juraj.projects.expenses.service.UserSignInService;
+import sk.juraj.projects.expenses.service.UserService;
 
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
-	private UserSignInService userService;
+	private UserService userService;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     
-    public WebSecurityConfig(final UserSignInService userService) {
+    public WebSecurityConfig(final UserService userService) {
 		this.userService = userService;
 		this.bCryptPasswordEncoder = new BCryptPasswordEncoder();
 	}

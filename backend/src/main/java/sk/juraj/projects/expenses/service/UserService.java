@@ -1,11 +1,16 @@
 package sk.juraj.projects.expenses.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import sk.juraj.projects.expenses.config.AppUserDetails;
 import sk.juraj.projects.expenses.dto.UserCreateRepresentation;
@@ -13,28 +18,39 @@ import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.UserRepository;
 
 @Service
-public class UserRegistrationService implements UserDetailsService {
-	
+public class UserService implements UserDetailsService {
+
 	@Autowired
 	private UserRepository userRepository;
 
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 	
-	public Long saveUser(final UserCreateRepresentation userDTO) {
-		final User userToSave = mapUserCreateRepresentationToUser(userDTO);
-		return userRepository.save(userToSave).getId();
+	@Transactional(readOnly = true)
+	public User getCurrentUser() {
+		final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		final String username = authentication.getName();
+		
+		return getUserByUsername(username);
+	}
+
+	@Transactional(readOnly = true)
+	public User getUserByUsername(final String username) {
+		return Optional.ofNullable(userRepository.findByUsername(username))
+			.orElseThrow(() -> new IllegalStateException(String.format("User %s is not present in the database", username)));
 	}
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(username);
-        }
-        return new AppUserDetails(user);
+        return new AppUserDetails(this.getUserByUsername(username));
 	}
-	
+
+	@Transactional
+	public Long saveUser(final UserCreateRepresentation userDTO) {
+		final User userToSave = mapUserCreateRepresentationToUser(userDTO);
+		return this.userRepository.save(userToSave).getId();
+	}
+
 	private User mapUserCreateRepresentationToUser(final UserCreateRepresentation userDTO) {
 		final User user = new User();
 		user.setUsername(userDTO.username());
@@ -44,5 +60,4 @@ public class UserRegistrationService implements UserDetailsService {
 		return user;
 	}
 	
-
 }

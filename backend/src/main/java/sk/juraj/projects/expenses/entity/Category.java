@@ -1,16 +1,12 @@
 package sk.juraj.projects.expenses.entity;
 
 import java.math.BigDecimal;
-import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -24,10 +20,7 @@ public class Category {
 
 	@Column(length=30, nullable=false, unique=true)
 	private String name;
-	
-//	@OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//	private List<Expense> expenses;
-	
+
 	private String colorCode;
 	
 	private BigDecimal monthlyBudget;
@@ -64,15 +57,6 @@ public class Category {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-//	public List<Expense> getExpenses() {
-//		return expenses;
-//	}
-//
-//	public void setExpenses(List<Expense> expenses) {
-//		this.expenses = expenses;
-//	}
-	
 
 	public String getColorCode() {
 		return colorCode;
