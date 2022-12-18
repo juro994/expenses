@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
-import sk.juraj.projects.expenses.dto.CategoryCreateRepresentation;
+import sk.juraj.projects.expenses.dto.CategoryCreateDTO;
+import sk.juraj.projects.expenses.dto.CategoryGetDTO;
 import sk.juraj.projects.expenses.service.CategoryService;
 
 @RestController
@@ -28,9 +28,9 @@ public class CategoryController {
 	
 	@GetMapping
 	@Deprecated
-	public ResponseEntity<List<CategoryGetRepresentation>> getCategoriesWithExpensesFromDate(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
+	public ResponseEntity<List<CategoryGetDTO>> getCategoriesWithExpensesFromDate(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
 		if(year.isPresent() && month.isPresent()) {
-			List<CategoryGetRepresentation> categoryDTOs = categoryService.getAllCategoriesWithExpensesForDate(year.get(), month.get());
+			List<CategoryGetDTO> categoryDTOs = categoryService.getAllCategoriesWithExpensesForDate(year.get(), month.get());
 			return ResponseEntity.ok(categoryDTOs);
 		} else {
 			throw new UnsupportedOperationException("Cannot get categories without month and year");
@@ -38,8 +38,8 @@ public class CategoryController {
 	}
 	
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<CategoryGetRepresentation> postCategory(@Valid @RequestBody CategoryCreateRepresentation categoryRepresentation) {
-		var savedCategory = categoryService.addNewCategory(categoryRepresentation);
+	public ResponseEntity<CategoryGetDTO> postCategory(@Valid @RequestBody CategoryCreateDTO categoryDTO) {
+		var savedCategory = categoryService.addNewCategory(categoryDTO);
 		return ResponseEntity.ok(savedCategory);
 	}
 	

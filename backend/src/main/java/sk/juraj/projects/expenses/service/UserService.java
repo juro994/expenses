@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import sk.juraj.projects.expenses.config.AppUserDetails;
-import sk.juraj.projects.expenses.dto.UserCreateRepresentation;
+import sk.juraj.projects.expenses.dto.UserCreateDTO;
 import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.UserRepository;
 
@@ -46,12 +46,12 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public Long saveUser(final UserCreateRepresentation userDTO) {
+	public Long saveUser(final UserCreateDTO userDTO) {
 		final User userToSave = mapUserCreateRepresentationToUser(userDTO);
 		return this.userRepository.save(userToSave).getId();
 	}
 
-	private User mapUserCreateRepresentationToUser(final UserCreateRepresentation userDTO) {
+	private User mapUserCreateRepresentationToUser(final UserCreateDTO userDTO) {
 		final User user = new User();
 		user.setUsername(userDTO.username());
 		user.setFirstName(userDTO.firstName());

@@ -4,9 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sk.juraj.projects.expenses.dto.ExpenseCreateRepresentation;
-import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
-import sk.juraj.projects.expenses.dto.ImmutableExpenseGetRepresentation;
+import sk.juraj.projects.expenses.dto.ExpenseCreateDTO;
+import sk.juraj.projects.expenses.dto.ExpenseGetDTO;
+import sk.juraj.projects.expenses.dto.ImmutableExpenseGetDTO;
 import sk.juraj.projects.expenses.entity.Category;
 import sk.juraj.projects.expenses.entity.Expense;
 import sk.juraj.projects.expenses.entity.User;
@@ -25,9 +25,9 @@ public class ExpenseAddingService {
 	private CategoryService categoryService;
 	
 	@Transactional
-	public ExpenseGetRepresentation addExpense(final ExpenseCreateRepresentation expenseCreateRepresentation) {
+	public ExpenseGetDTO addExpense(final ExpenseCreateDTO expenseCreateRepresentation) {
 		final Long categoryId = expenseCreateRepresentation.categoryId().orElseThrow(() -> new IllegalArgumentException("Cannot add expense to category with id null"));
-		final Category category = categoryService.getCategoryById(categoryId);
+		final Category category = categoryService.getCategoryEntityById(categoryId);
 		
 		final User user = userService.getCurrentUser();
 
@@ -36,7 +36,7 @@ public class ExpenseAddingService {
 		return mapExpenseToExpenseGetRepresentation(expenseSaved);
 	}
 
-	private Expense mapExpenseCreateRepresentationToExpense(final ExpenseCreateRepresentation expenseDTO, final Category category, final User user) {
+	private Expense mapExpenseCreateRepresentationToExpense(final ExpenseCreateDTO expenseDTO, final Category category, final User user) {
 		final Expense expense = new Expense();
 		expense.setTitle(expenseDTO.getName());
 		expense.setAmount(expenseDTO.getAmount());
@@ -45,8 +45,8 @@ public class ExpenseAddingService {
 		return expense;
 	}
 
-	private ExpenseGetRepresentation mapExpenseToExpenseGetRepresentation(final Expense expense) {
-		return ImmutableExpenseGetRepresentation.builder()
+	private ExpenseGetDTO mapExpenseToExpenseGetRepresentation(final Expense expense) {
+		return ImmutableExpenseGetDTO.builder()
 		.name(expense.getTitle())
 		.amount(expense.getAmount())
 		.modified(expense.getModified())

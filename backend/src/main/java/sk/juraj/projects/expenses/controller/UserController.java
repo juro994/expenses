@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import sk.juraj.projects.expenses.dto.UserCreateRepresentation;
+import sk.juraj.projects.expenses.dto.UserCreateDTO;
 import sk.juraj.projects.expenses.service.UserService;
 
 @RestController
@@ -22,7 +22,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<Long> postUser(@Valid @RequestBody UserCreateRepresentation userDTO) {
+	public ResponseEntity<Long> postUser(@Valid @RequestBody UserCreateDTO userDTO) {
 		final Long savedUserId = userService.saveUser(userDTO);
 		return ResponseEntity.ok(savedUserId);
 	}

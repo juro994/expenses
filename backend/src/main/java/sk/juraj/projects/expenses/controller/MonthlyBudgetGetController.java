@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import sk.juraj.projects.expenses.dto.MonthlyBudgetGetRepresentation;
+import sk.juraj.projects.expenses.dto.MonthlyBudgetGetDTO;
 import sk.juraj.projects.expenses.service.MonthlyBudgetService;
 
 @RestController
@@ -22,9 +22,9 @@ public class MonthlyBudgetGetController {
     private MonthlyBudgetService monthlyBudgetService;
     
     @GetMapping
-	public ResponseEntity<MonthlyBudgetGetRepresentation> getMonthlyBudgetOverview(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
+	public ResponseEntity<MonthlyBudgetGetDTO> getMonthlyBudgetOverview(@RequestParam Optional<Integer> year, @RequestParam Optional<Integer> month) {
 		if(year.isPresent() && month.isPresent()) {
-			final MonthlyBudgetGetRepresentation monthlyBudgetDTO = monthlyBudgetService.getMonthlyBudgetOverview(year.get(), month.get());
+			final MonthlyBudgetGetDTO monthlyBudgetDTO = monthlyBudgetService.getMonthlyBudgetOverview(year.get(), month.get());
 			return ResponseEntity.ok(monthlyBudgetDTO);
 		} else {
 			throw new UnsupportedOperationException("Cannot get monthly budget overview without month and year");

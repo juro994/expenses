@@ -6,9 +6,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ImmutableUserCreateRepresentation.Builder.class)
-@JsonSerialize(as = ImmutableUserCreateRepresentation.class)
-public interface UserCreateRepresentation {
+@JsonDeserialize(builder = ImmutableUserCreateDTO.Builder.class)
+@JsonSerialize(as = ImmutableUserCreateDTO.class)
+public interface UserCreateDTO {
 
 	public String firstName();
 	

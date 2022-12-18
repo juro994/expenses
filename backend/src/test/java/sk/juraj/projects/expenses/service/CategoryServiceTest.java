@@ -51,7 +51,7 @@ public class CategoryServiceTest {
 		
 		// then
 		assertEquals(0, categoriesWithExpenses.size());
-		verify(this.expenseRepository, never()).findByModifiedInYearAndMonth(any(), any(), any());
+		verify(this.expenseRepository, never()).getByModifiedInYearAndMonth(any(), any(), any());
 	}
 
 	// @Test

@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import sk.juraj.projects.expenses.dto.ExpenseCreateRepresentation;
-import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
+import sk.juraj.projects.expenses.dto.ExpenseCreateDTO;
+import sk.juraj.projects.expenses.dto.ExpenseGetDTO;
 import sk.juraj.projects.expenses.service.ExpenseAddingService;
 
 @RestController
@@ -23,9 +23,9 @@ public class ExpenseController {
 	private ExpenseAddingService expenseAddingService;
 
 	@PostMapping(consumes = "application/json")
-	public ResponseEntity<ExpenseGetRepresentation> postExpense(
-			@Valid @RequestBody ExpenseCreateRepresentation expenseDTO) {
-		final ExpenseGetRepresentation expenseSaved = expenseAddingService.addExpense(expenseDTO);
+	public ResponseEntity<ExpenseGetDTO> postExpense(
+			@Valid @RequestBody ExpenseCreateDTO expenseDTO) {
+		final ExpenseGetDTO expenseSaved = expenseAddingService.addExpense(expenseDTO);
 		return ResponseEntity.ok(expenseSaved);
 	}
 

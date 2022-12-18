@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ImmutableExpenseGetRepresentation.Builder.class)
-@JsonSerialize(as = ImmutableExpenseGetRepresentation.class)
-public interface ExpenseGetRepresentation {
+@JsonDeserialize(builder = ImmutableExpenseGetDTO.Builder.class)
+@JsonSerialize(as = ImmutableExpenseGetDTO.class)
+public interface ExpenseGetDTO {
 
     public String getName();
 	

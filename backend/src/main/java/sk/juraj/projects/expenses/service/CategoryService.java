@@ -7,10 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sk.juraj.projects.expenses.dto.CategoryCreateRepresentation;
-import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
-import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
-import sk.juraj.projects.expenses.dto.ImmutableCategoryGetRepresentation;
+import sk.juraj.projects.expenses.dto.CategoryCreateDTO;
+import sk.juraj.projects.expenses.dto.CategoryGetDTO;
+import sk.juraj.projects.expenses.dto.ExpenseGetDTO;
+import sk.juraj.projects.expenses.dto.ImmutableCategoryGetDTO;
 import sk.juraj.projects.expenses.entity.Category;
 import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.CategoryRepository;
@@ -30,7 +30,7 @@ public class CategoryService {
 	private UserService userService;
 	
 	@Transactional(readOnly = true)
-	public List<CategoryGetRepresentation> getAllCategoriesWithExpensesForDate(Integer year, Integer month) {
+	public List<CategoryGetDTO> getAllCategoriesWithExpensesForDate(final Integer year, final Integer month) {
 		final User user = userService.getCurrentUser();
 		
 		final List<Category> allCategories = categoryRepository.findByUser(user);
@@ -39,10 +39,10 @@ public class CategoryService {
 			return List.of();
 		}
 
-		final List<ExpenseGetRepresentation> allExpensesInYearAndMonth = expenseRetrievalService.findByModifiedInYearAndMonth(year, month, user);
+		final List<ExpenseGetDTO> allExpensesInYearAndMonth = expenseRetrievalService.getExpensesByYearAndMonth(year, month, user);
 
 		return allCategories.stream().map(category -> {
-			List<ExpenseGetRepresentation> allExpensesOfCategory = allExpensesInYearAndMonth.stream()
+			List<ExpenseGetDTO> allExpensesOfCategory = allExpensesInYearAndMonth.stream()
 			.filter(e -> category.getId().equals(e.categoryId()))
 			.collect(Collectors.toList());
 
@@ -51,12 +51,12 @@ public class CategoryService {
 	}
 
 	@Transactional(readOnly = true)
-	public Category getCategoryById(Long categoryId) {
+	public Category getCategoryEntityById(Long categoryId) {
 		return this.categoryRepository.findById(categoryId).orElseThrow(() -> new IllegalArgumentException(String.format("Category with id %s doesn't exist", categoryId)));
 	}
 
 	@Transactional
-	public CategoryGetRepresentation addNewCategory(CategoryCreateRepresentation categoryDTO) {
+	public CategoryGetDTO addNewCategory(CategoryCreateDTO categoryDTO) {
 		final Category category = mapCategoryDTOtoCategory(categoryDTO);
 		if(category == null) {
 			throw new IllegalArgumentException("Cannot save null category");
@@ -72,8 +72,8 @@ public class CategoryService {
 		return mapCategoryToCategoryDTO(categoryRepository.save(category)) ;
 	}
 
-	private CategoryGetRepresentation mapCategoryToCategoryGetDTO(final Category category, final List<ExpenseGetRepresentation> expenses) {
-		return ImmutableCategoryGetRepresentation.builder()
+	private CategoryGetDTO mapCategoryToCategoryGetDTO(final Category category, final List<ExpenseGetDTO> expenses) {
+		return ImmutableCategoryGetDTO.builder()
 			.id(category.getId())
 			.name(category.getName())
 			.monthlyBudget(category.getMonthlyBudget())
@@ -82,7 +82,7 @@ public class CategoryService {
 			.build();
 	}
 
-	private Category mapCategoryDTOtoCategory(final CategoryCreateRepresentation categoryDTO) {
+	private Category mapCategoryDTOtoCategory(final CategoryCreateDTO categoryDTO) {
 		Category category = new Category();
 		var trimmedName = categoryDTO.getName().trim();
 		category.setName(trimmedName);
@@ -91,8 +91,8 @@ public class CategoryService {
 		return category;
 	}
 
-	private CategoryGetRepresentation mapCategoryToCategoryDTO(final Category category) {
-		var categoryDTO = ImmutableCategoryGetRepresentation.builder()
+	private CategoryGetDTO mapCategoryToCategoryDTO(final Category category) {
+		var categoryDTO = ImmutableCategoryGetDTO.builder()
 		.id(category.getId())
 		.name(category.getName())
 		.monthlyBudget(category.getMonthlyBudget())

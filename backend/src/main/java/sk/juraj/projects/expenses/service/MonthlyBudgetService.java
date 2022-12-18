@@ -8,11 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sk.juraj.projects.expenses.dto.CategoryGetRepresentation;
-import sk.juraj.projects.expenses.dto.ExpenseGetRepresentation;
-import sk.juraj.projects.expenses.dto.ImmutableMonthlyBudgetGetRepresentation;
-import sk.juraj.projects.expenses.dto.IncomeGetRepresentation;
-import sk.juraj.projects.expenses.dto.MonthlyBudgetGetRepresentation;
+import sk.juraj.projects.expenses.dto.CategoryGetDTO;
+import sk.juraj.projects.expenses.dto.ExpenseGetDTO;
+import sk.juraj.projects.expenses.dto.ImmutableMonthlyBudgetGetDTO;
+import sk.juraj.projects.expenses.dto.IncomeGetDTO;
+import sk.juraj.projects.expenses.dto.MonthlyBudgetGetDTO;
 
 @Service
 public class MonthlyBudgetService {
@@ -24,24 +24,24 @@ public class MonthlyBudgetService {
     private IncomeService incomeService;
 
     @Transactional(readOnly = true)
-    public MonthlyBudgetGetRepresentation getMonthlyBudgetOverview(Integer year, Integer month) {
-        final List<CategoryGetRepresentation> allCategoriesWithExpensesForDate = categoryService.getAllCategoriesWithExpensesForDate(year, month);
+    public MonthlyBudgetGetDTO getMonthlyBudgetOverview(final Integer year, final Integer month) {
+        final List<CategoryGetDTO> allCategoriesWithExpensesForDate = categoryService.getAllCategoriesWithExpensesForDate(year, month);
 
         final BigDecimal totalSpentForTheMonth = allCategoriesWithExpensesForDate
         .stream()
-        .map(CategoryGetRepresentation::getExpenses)
+        .map(CategoryGetDTO::getExpenses)
         .flatMap(Collection::stream)
-        .map(ExpenseGetRepresentation::getAmount)
+        .map(ExpenseGetDTO::getAmount)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        final List<IncomeGetRepresentation> incomeItems = this.incomeService.getAllIncomeItemsWithForDate(year, month);
+        final List<IncomeGetDTO> incomeItems = this.incomeService.getAllIncomeItemsWithForDate(year, month);
 
         final BigDecimal totalBudgetForTheMonth = incomeItems
         .stream()
-        .map(IncomeGetRepresentation::getAmount)
+        .map(IncomeGetDTO::getAmount)
         .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-        return ImmutableMonthlyBudgetGetRepresentation.builder()
+        return ImmutableMonthlyBudgetGetDTO.builder()
         .categories(allCategoriesWithExpensesForDate)
         .totalSpent(totalSpentForTheMonth)
         .incomeItems(incomeItems)

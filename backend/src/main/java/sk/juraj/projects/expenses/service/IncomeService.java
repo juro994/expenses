@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import sk.juraj.projects.expenses.dto.ImmutableIncomeGetRepresentation;
-import sk.juraj.projects.expenses.dto.IncomeCreateRepresentation;
-import sk.juraj.projects.expenses.dto.IncomeGetRepresentation;
+import sk.juraj.projects.expenses.dto.ImmutableIncomeGetDTO;
+import sk.juraj.projects.expenses.dto.IncomeCreateDTO;
+import sk.juraj.projects.expenses.dto.IncomeGetDTO;
 import sk.juraj.projects.expenses.entity.Income;
 import sk.juraj.projects.expenses.entity.User;
 import sk.juraj.projects.expenses.repository.IncomeRepository;
@@ -24,7 +24,7 @@ public class IncomeService {
 	private UserService userService;
 	
 	@Transactional
-	public IncomeGetRepresentation addIncome(final IncomeCreateRepresentation incomeCreateRepresentation) {
+	public IncomeGetDTO addIncome(final IncomeCreateDTO incomeCreateRepresentation) {
 		final User user = userService.getCurrentUser();
 
 		final Income incomeSaved = incomeRepository.save(mapIncomeCreateRepresentationToIncome(incomeCreateRepresentation, user));
@@ -33,7 +33,7 @@ public class IncomeService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<IncomeGetRepresentation> getAllIncomeItemsWithForDate(Integer year, Integer month) {
+	public List<IncomeGetDTO> getAllIncomeItemsWithForDate(Integer year, Integer month) {
 		final User user = userService.getCurrentUser();
 		
 		final List<Income> allIncomeItemsInYearAndMonth = incomeRepository.findByModifiedInYearAndMonth(year, month, user.getUsername());
@@ -41,7 +41,7 @@ public class IncomeService {
 		return allIncomeItemsInYearAndMonth.stream().map(this::mapIncomeToIncomeGetRepresentation).collect(Collectors.toList());
 	}
 
-	private Income mapIncomeCreateRepresentationToIncome(final IncomeCreateRepresentation incomeDTO, final User user) {
+	private Income mapIncomeCreateRepresentationToIncome(final IncomeCreateDTO incomeDTO, final User user) {
 		final Income income = new Income();
 		income.setTitle(incomeDTO.getName());
 		income.setAmount(incomeDTO.getAmount());
@@ -49,8 +49,8 @@ public class IncomeService {
 		return income;
 	}
 
-	private IncomeGetRepresentation mapIncomeToIncomeGetRepresentation(final Income income) {
-		return ImmutableIncomeGetRepresentation.builder()
+	private IncomeGetDTO mapIncomeToIncomeGetRepresentation(final Income income) {
+		return ImmutableIncomeGetDTO.builder()
 		.name(income.getTitle())
 		.amount(income.getAmount())
 		.modified(income.getModified())

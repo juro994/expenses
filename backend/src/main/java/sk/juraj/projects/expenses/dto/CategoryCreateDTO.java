@@ -10,11 +10,9 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
-@JsonDeserialize(builder = ImmutableCategoryGetRepresentation.Builder.class)
-@JsonSerialize(as = ImmutableCategoryGetRepresentation.class)
-public interface CategoryGetRepresentation {
-
-    public Long getId();
+@JsonDeserialize(builder = ImmutableCategoryCreateDTO.Builder.class)
+@JsonSerialize(as = ImmutableCategoryCreateDTO.class)
+public interface CategoryCreateDTO {
 
     public String getName();
 
@@ -22,6 +20,6 @@ public interface CategoryGetRepresentation {
 
     public BigDecimal getMonthlyBudget();
 
-    public List<ExpenseGetRepresentation> getExpenses();
+    public List<ExpenseGetDTO> getExpenses();
     
 }
