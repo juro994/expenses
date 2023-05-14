@@ -1,5 +1,6 @@
 package sk.juraj.projects.expenses.service;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,9 @@ public class ExpenseAddingService {
 	
 	@Autowired
 	private CategoryService categoryService;
+
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Transactional
 	public ExpenseGetDTO addExpense(final ExpenseCreateDTO expenseCreateRepresentation) {

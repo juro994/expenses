@@ -1,5 +1,6 @@
 package sk.juraj.projects.expenses.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -7,6 +8,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import sk.juraj.projects.expenses.converter.ToCategoryConverter;
+import sk.juraj.projects.expenses.converter.ToCategoryGetDTOConverter;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.spi.DocumentationType;
@@ -33,6 +36,18 @@ public class ApplicationConfig {
 			}
 		};
 	}
+
+	@Bean
+ 	public ModelMapper modelMapper() {
+ 		var modelMapper = new ModelMapper();
+ 		addConverters(modelMapper);
+ 		return modelMapper;
+ 	}
+
+ 	private void addConverters(ModelMapper modelMapper) {
+ 		modelMapper.addConverter(new ToCategoryGetDTOConverter());
+		modelMapper.addConverter(new ToCategoryConverter());
+ 	}
 
 	@Bean
 	public BCryptPasswordEncoder bCryptPasswordEncoder() {
